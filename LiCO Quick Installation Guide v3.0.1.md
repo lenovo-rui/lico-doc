@@ -8,7 +8,7 @@ LiCO Quick Installation Guide v3.0.1
 #1. Download the Package
 
 ##Download OS and Installation files
-LiCO support CentOS 6.5/6.8 and RedHat 6.5/6.8. If required system is CentOS, please download both CentOS-*-DVD1.iso ( for head node installation) and CentOS-*-DVD.iso ( for LiCO yum source)  from team's FTP.  
+LiCO supports CentOS 6.5/6.8 and RedHat 6.5/6.8. If required system is CentOS, please download both CentOS-*-DVD1.iso ( for head node installation) and CentOS-*-DVD.iso ( for LiCO yum source)  from team's FTP.  
 
 >**System Package URL**
 >
@@ -30,7 +30,7 @@ To install RedHat, just download one ISO file, since both head node and yum sour
 
 #2. For installation on an existed Cluster, please reference Appendix 2
 
-LiCO support installing Web server on an existed cluster, but it still needs to meet some minimum requirements, please reference Appendix 2 for more information.  
+LiCO supports installing Web server on an existed cluster, but it still needs to meet some minimum requirements, please reference Appendix 2 for more information.  
 
 #3. Config IMM IP and create IPMI account for nodes in cluster
 
@@ -162,78 +162,106 @@ Check the configuration of Head node:
 
 [IMHO] we should automatically check all nodes we config'ed, asynchronously. If there is any failure or problem, report to admin console.  
 
-#5.	Deploy Cluster部署集群
-- 修改集群节点配置文件
-参考附录1
-- 添加节点到xcat
+#5.	Deploy Cluster
+
+###Modify Cluster configuration file
+Please reference Appendix 1
+
+###Add node to xcat 
+
 >[root@mgt bin]# ./add_nodes.py
  
-- 配置节点的RAID
-ssh到节点的imm, 用如下的命令来配置节点的raid，如果节点已经配置过raid，可以不配置。
+###Config Raid of Node
+Remotely connect to IMM of the node through ssh channel, and use following command to configure the Raid. Skip if Raid was already configured. 
 
->system> storage -config vol -add -R 1 -D disk[9-0]:disk[9-1] -target ctrl[9]
->system> storage -list volumes
-
->**NOTE:**
->这个命令只在m5的机子上支持，如果这个命令机子不支持，那么需要手动通过UEFI配raid。
-
-- 获取节点的mac地址（Thinkserver参考附录3的ThinkServer Support方法）
->[root@mgt bin]# ./discover_node_macs_using_imm.py --node "nodes1,nodes2,node[3-5]" --immuser "USERID" --immpwd "Passw0rd"
-
-
-命令获取节点的所有mac地址，命令执行结果保存在bin下面的macs.txt , 打开macs.txt可以看到默认的 “selectednic” 是第一个nic，编辑修改selectednic来为安装os的时候需要的nic(与头结点managemen-network的nic连通的nic)。
-
-    Node1;selectednic=PXE.NicPortMacAddress.1;PXE.NicPortMacAddress.1=00:90:FA:0D:39:3C;PXE.NicPortMacAddress.2=00:90:FA:0D:39:40;PXE.NicPortMacAddress.3=00:90:FA:0D:39:44;PXE.NicPortMacAddress.4=00:90:FA:0D:39:48
-    Node2;selectednic=PXE.NicPortMacAddress.1;PXE.NicPortMacAddress.1=00:00:C9:F5:6D:08;PXE.NicPortMacAddress.2=00:00:C9:F5:6D:0C;PXE.NicPortMacAddress.3=00:00:C9:F5:6D:10;PXE.NicPortMacAddress.4=00:00:C9:F5:6D:14
-
-编辑完 macs.txt后，通过如下命令将选中的nic添加到xcat的数据库表中。
->[root@mgt bin]# ./set_node_mac_in_xcat.py -c "macs.txt"
-
-- 部署节点（Thinkserver参考附录3的ThinkServer Support方法）
->[root@mgt bin]# ./deploy_nodes.py "node1,node2,node[3-5]"
->
->**NOTE:**
->如果命令执行碰到类似如下的错误，按ctrl c结束，然后重新跑就可以了。
-
-Error: Unable to find an IP for c01n001-data in hosts table or via system lookup (i.e. /etc/hosts)
+    system> storage -config vol -add -R 1 -D disk[9-0]:disk[9-1] -target ctrl[9]
+    
+    system> storage -list volumes
 
 >**NOTE:**
 >
->计算节点部署的时间较长，需要在系统启动过程中（booting）安装很多软件包，请耐心等待。
->
->部署后的节点的root账号是root/Passw0rd
+>This command of Raid configuration is only supported by m5 machine, please use UEFI for other type of machines.
 
-节点部署完成后，可以通过如下命令确认节点部署成功与否
+###Retrieve MAC Addresses of Nodes (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment)
 
-> [root@mgt bin]# ./service_manager.py  --check torque [root@mgt bin]#
-> ./service_manager.py  --check ganglia [root@mgt bin]#
-> ./service_manager.py  --check clusterping [root@mgt bin]#
-> ./service_manager.py  --check mpi
+Use following command to get mac addresses of all nodes. The results of mac addresses returned are stored in macs.txt (folder path is: "/lico_3.x/bin/"). 
+The first NIC is  marked as "selectednic" by default. You can change it to the NIC which you used to install OS, the NIC you used should be connected to Management Network.
 
-登录Ganglia，查看ganglia是否成功
+    [root@mgt bin]# ./discover_node_macs_using_imm.py --node "nodes1,nodes2,node[3-5]" --immuser "USERID" --immpwd "Passw0rd"
 
-> http://172.20.0.1/ganglia
+Here is the content of a macx.txt: 
 
-- 对节点的application nic进行重命名（可选）
+    Node1;
+      selectednic=PXE.NicPortMacAddress.1;
+      PXE.NicPortMacAddress.1=00:90:FA:0D:39:3C;
+      PXE.NicPortMacAddress.2=00:90:FA:0D:39:40;
+      PXE.NicPortMacAddress.3=00:90:FA:0D:39:44;
+      PXE.NicPortMacAddress.4=00:90:FA:0D:39:48
+    
+    Node2;
+      selectednic=PXE.NicPortMacAddress.1;
+      PXE.NicPortMacAddress.1=00:00:C9:F5:6D:08;
+      PXE.NicPortMacAddress.2=00:00:C9:F5:6D:0C;
+      PXE.NicPortMacAddress.3=00:00:C9:F5:6D:10;
+      PXE.NicPortMacAddress.4=00:00:C9:F5:6D:14
 
-> **NOTE:** 如果不同节点application网络对应的网口名字本来就是相同的，比如都是eth1等，就可以忽略此步骤。
+Use following command to add selected NIC to database of xcat, after finishing editing of macx.txt. 
 
+    [root@mgt bin]# ./set_node_mac_in_xcat.py -c "macs.txt"
 
-不同的节点中application网络对应的网口名字可能不相同，我们需要将所有节点中application网络对应的网口改成同样的名字，以便有的高性能作业可以指定使用application网络的网口名。
+###Deploy Node (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment) 
 
-重命名非头节点的application网络的网口为统一的名字:
+User following scripts to deploy nodes:
 
-> [root@mgt bin]# ./rename_node_nic.py --node nodes1,nodes2,node[3-5]
-> --nictype ib --old ib0 --new ibdata 重命名头节点的application网络的网口为统一的名字: [root@mgt bin]# ./rename_node_nic.py --node localhost --nictype ib
-> --old ib0 --new ibdata
-
-通过xcat命令rpower all reset 来重启除头节点外的所有节点
-Reboot命令重启头节点
+    [root@mgt bin]# ./deploy_nodes.py "node1,node2,node[3-5]"
 
 >**NOTE:**
 >
->- 头节点如果重启的时候hang住，请手动重启头节点。
->- 机子启动完成后请检查一下是否生效。
+>When meeting problems below, press 'ctrl+c' to termindate, then re-run the scripts. 
+>`Error: Unable to find an IP for c01n001-data in hosts table or via system lookup (i.e. /etc/hosts)`
+
+
+>**NOTE:**
+>
+>Please be patient, since it takes long time installing software packages to compute nodes. 
+>
+>the root password of each node is 'Passw0rd'
+
+Please use following commands to check if all nodes are deployed successfully. 
+
+    [root@mgt bin]# ./service_manager.py  --check torque [root@mgt bin]#
+    ./service_manager.py  --check ganglia [root@mgt bin]#
+    ./service_manager.py  --check clusterping [root@mgt bin]#
+    ./service_manager.py  --check mpi
+
+Please login to ganglia and check if ganglia is correctly deployed. 
+
+    http://172.20.0.1/ganglia
+
+###Rename Application NIC of a Node (optional)
+
+> **NOTE:**
+> 
+>Skip this step if Application NIC name is same in different nodes, e.g. eth1. 
+
+It is possible that application NIC names are different in each nodes. So that high performance job can be assigned to a certain application NIC, it is better to use same NIC name for all nodes of a cluster. 
+
+Use following script to rename application NIC name of non-Head node to the same name:
+
+    [root@mgt bin]# ./rename_node_nic.py --node nodes1,nodes2,node[3-5] --nictype ib --old ib0 --new ibdata 
+
+Use following script to rename application NIC name of Head node to the same name:
+
+    [root@mgt bin]# ./rename_node_nic.py --node localhost --nictype ib --old ib0 --new ibdata
+
+Use command "rpower all reset" of xcat to reboot all nodes except Head node.
+Use "Reboot" to reboot Head node. 
+
+>**NOTE:**
+>
+>- If Head node hangs in rebooting, please do it manually.
+>
+>- Please check whether config is applied successfully after reboot.
 
 #6. 安装分布式文件系统lustre
 如果集群要使用的分布式文件系统不是lustre，请忽略此步骤。
