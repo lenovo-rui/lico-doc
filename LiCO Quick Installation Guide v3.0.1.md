@@ -13,8 +13,11 @@ LiCO support CentOS 6.5/6.8 and RedHat 6.5/6.8. If required system is CentOS, pl
 >**System Package URL**
 >
 >ftp://10.240.208.41/packages/CentOS-6.5-x86_64-bin-DVD1.iso
+
 >ftp://10.240.208.41/packages/CentOS-6.5-x86_64-DVD.iso
+
 >ftp://10.240.208.41/packages/CentOS-6.8-x86_64-bin-DVD1.iso
+
 >ftp://10.240.208.41/packages/CentOS-6.8-x86_64-DVD.iso
 
 If user is going to install RedHat, user just needs to download one ISO file, since both head node and yum source are packaged in a single ISO file.  
@@ -23,7 +26,7 @@ If user is going to install RedHat, user just needs to download one ISO file, si
 
 >**LiCO  Package URL**
 >
->ftp://10.240.208.41/Releases/ 
+>ftp://10.240.208.41/Releases/
 
 #2. If install on an existed Cluster, please reference Appendix 2
 
@@ -42,7 +45,7 @@ Manually config IMM IP and Create IPMI account.
 - Step 0: Config raid of Head node, Raid1 is suggested. Skip if the raid is already reconfigured.
 - Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for Head node.
 
->**NOTE:** 
+>**NOTE:**
 >1. If you are using CentOS, please download image CentOS-*-DVD1.iso to install Head node.
 >2. Please select English as the System language.
 
@@ -52,10 +55,10 @@ Manually config IMM IP and Create IPMI account.
 
     Management Network (OS) IP, e.g. 172.20.0.1
     Application Network IP, e.g. 172.22.0.1
-    Public Network IP (optional, for remote access to Head node). 
+    Public Network IP (optional, for remote access to Head node).
 
-Edit "/etc/sysconfig/network-scripts/eth*" or "/etc/sysconfig/network-scripts/ib*" to setup network card. 
-[RUI] Errata, In Red Hat Linux, it uses files ifcfg-ethX for different network interface configuration. 
+Edit "/etc/sysconfig/network-scripts/eth*" or "/etc/sysconfig/network-scripts/ib*" to setup network card.
+[RUI] Errata, In Red Hat Linux, it uses files ifcfg-ethX for different network interface configuration.
 [RUI] What is IB? What is the difference>
 
     ONBOOT=yes
@@ -64,7 +67,7 @@ Edit "/etc/sysconfig/network-scripts/eth*" or "/etc/sysconfig/network-scripts/ib
     IPADDR=10.240.212.28
     NETMASK=255.255.255.0
     GATEWAY=10.240.212.1
-please use command below to restart network service. 
+please use command below to restart network service.
 > \#service network restart
 IP地址设置好以后重启网络服务：service network restart。
 >**NOTE:**
@@ -77,12 +80,12 @@ IP地址设置好以后重启网络服务：service network restart。
 >If installing CentOS, please download CentOS-*-DVD.iso to LiCO folder, e.g. "/lico_3.x/packages/os".如果Centos，将下载的CentOS-*-DVD.iso拷贝到/lico_3.x/packages/os目录下
 
 - Step 6: Modify the configuration file 修改配置文件
-    
+
     [root@mgt ~]# cd /lico_3.x/etc/
-    [root@mgt etc]# vi cluster.conf 
+    [root@mgt etc]# vi cluster.conf
     DOMAIN="hpc.com"
     OS="centos6.5" #OS version
-    OSISO="CentOS-6.5-x86_64-DVD.iso" # ISO image filename 
+    OSISO="CentOS-6.5-x86_64-DVD.iso" # ISO image filename
 
 >**NOTE:**
 >Both CentOS6.5/6.8 and Red Hat 6.5/6.8 is supported by LiCO. If you are using RedHat, use following configuration. 当前支持 Red Hat 6.5/6.8 and CentOS 6.5/6.8。如果是Redhat，配置如下
@@ -107,7 +110,7 @@ IP地址设置好以后重启网络服务：service network restart。
         nictype         Ethernet
         mgtifname       eth0  # the nicname of management network on the head node
         netmask       255.255.0.0
-        gateway       <xcatmaster>   #no need to change 
+        gateway       <xcatmaster>   #no need to change
         staticrange     172.20.0.11-172.20.1.255
         dynamicrange  172.20.10.1-172.20.10.254
     }
@@ -126,7 +129,7 @@ IP地址设置好以后重启网络服务：service network restart。
         gateway       10.240.212.1			# Note: It must match the customer network environment
         staticrange     10.240.212.29-10.240.212.40		# Note: It must match the customer network environment
     }
-    
+
 - Step 9: Setup Head Node
 >[root@mgt setup]# ./1_head_node_setup.sh （don't execute thie command through ssh, execute it locally.）
 >[root@mgt setup]# ssh mgt（ssh Head node itself）
@@ -143,7 +146,7 @@ Check the configuration of Head node: 检查头节点setup是否成功
 参考附录1
 - 添加节点到xcat
 >[root@mgt bin]# ./add_nodes.py
- 
+
 - 配置节点的RAID
 ssh到节点的imm, 用如下的命令来配置节点的raid，如果节点已经配置过raid，可以不配置。
 
@@ -225,7 +228,7 @@ Reboot命令重启头节点
     	datanet_hostnamemap io01:io01-data,io02:io02-data	#the map between normal nodename and nodename for interface
     	mds {
     	   io01    /dev/sdb1    #硬盘，在io01上通过fdisk或parted查看或分区
-    io02    /dev/sdb1	
+    io02    /dev/sdb1
     	};
     	oss {
     		io01    /dev/sdb2
@@ -233,7 +236,7 @@ Reboot命令重启头节点
     	};
          #### The following items is NOT required to input if no HA required.	###
     	 ha_heartbeat_net {
-    		io01[eth1,192.168.1.11,255.255.255.0]:io02[eth1,192.168.1.12,255.255.255.0] 
+    		io01[eth1,192.168.1.11,255.255.255.0]:io02[eth1,192.168.1.12,255.255.255.0]
     	 };
     	 ha_mdt {
     	  io01:io02
@@ -284,7 +287,7 @@ cluster_sharedir：cluster_sharedir设置集群中除了user_home_base和user_ro
 例如系统中创建一个用户hpcadmin，其目录如下：
 
 /share1/users_root/hpcadmin用户的根目录，也即web上显示的最顶层目录
-/share1/users_root/hpcadmin/home 软连接到用户的home目录 
+/share1/users_root/hpcadmin/home 软连接到用户的home目录
 /share1/users_root/hpcadmin/share2软连接到sharedir
 /share1/users_home/hpcadmin用户的home目录
 /share2sharedir
@@ -319,7 +322,7 @@ cluster_sharedir：cluster_sharedir设置集群中除了user_home_base和user_ro
 
 比如可以在screen里面启动这个service，screen -help可以查看screen命令的使用。
 
-> [root@mgt lico_3.x]# screen 
+> [root@mgt lico_3.x]# screen
 > [root@mgt lico_3.x]# ./lico start
 
 这时候如果关闭这个shell（不要用命令exit退出这个shell，这样的话这个screen也不存在了），screen和shell还在，可以用screen -r重新进入这个screen，可以看到原来的shell还在。
@@ -332,7 +335,7 @@ cluster_sharedir：cluster_sharedir设置集群中除了user_home_base和user_ro
 
 >URL: http://172.20.0.1:8080/login/   
 >Username/Password: hpcadmin/Passw0rd
-> 
+>
 > **Note：** 如果GUI portal上显示的node的状态不正确，通过route命令查看ganglia是否监控在正确的网口上，ganglia应该监控在管理网的网口上。如果不在，在每台机子上通过ip route add 239.2.11.71 dev eth0（管理网口）来设置，然后在所有节点重启gmond的服务service gmond restart, 然后重启LiCO(./lico stop; ./lico start)
 
 #9.	部署报警模块Nagios(可选，不建议部署)
@@ -413,7 +416,7 @@ cluster_sharedir：cluster_sharedir设置集群中除了user_home_base和user_ro
 [root@mgt openldap]# ./setup_openldap_client.sh compute2 172.20.0.1(头节点的ip)
 ldap环境搭建好以后，如果集群用的调度器是torque，需要重启torque相关的服务：
 头节点上torque相关的服务是：
-Service trqauthd restart 
+Service trqauthd restart
 Service pbs_server restart
 Service maui.d restart
 计算节点和login节点上torque相关的服务是：
@@ -430,12 +433,12 @@ Note：如果使用NFS作为共享文件系统，那么所有节点在mount nfs�
 当使用LiCO创建或将已经有的ldap用户user1导入LiCO的时候，LiCO会在/share1/ users_root创建一个user1的目录，在/share1/users_root/user1下面会创建一个home的软连接，连接到/share1/ users_home /user1，同时/share1/users_root/user1下面会创建一个share2的软连接，连接到/share2。/share1/ users_root /user1是user1在LiCO的web页面上看到的文件系统的最顶层目录。
 最终user1的目录如下：
 /share1/users_root/user1用户的根目录，也即web上显示的最顶层目录
-/share1/users_root/hpcadmin/home 软连接到用户的home目录 
+/share1/users_root/hpcadmin/home 软连接到用户的home目录
 /share1/users_root/hpcadmin/share2软连接到sharedir
 /share1/users_home/user1用户的home目录
 /share2sharedir
 	编辑lico_3.**/etc/conf.yaml, user_management下面的ldap相关的内容。
-如ldap_server,ldap_manager,ldap_password等。 
+如ldap_server,ldap_manager,ldap_password等。
 Note：如果ldap的环境是使用LiCO的脚本搭建的，只需要修改ldap_server, ldap_manager,ldap_password不需要修改。
 9.	编辑配置文件lico_3.**/etc/conf.yaml. 修改其中scheduler相关的内容。
 选择使用的调度器,现在支持Torque和LSF。 #Note：这里需要保证root用户可以运行Torque和LSF的命令。如果queues_auto_get设置为True，那么queues的内容将被忽略，如果queues_auto_get设置为False，queues里面的内容必须设置。
@@ -492,8 +495,8 @@ nodediscoverstart noderange=c01n[001-010]
 cat /dev/null > /var/log/messages
 tail -f /var/log/messages | grep DHCPDISCOVER
 -- 在shell A里面
-rpower c01n001 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n001 off， 然后开始下一个节点 c01n002 
-rpower c01n002 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n002 off，然后开始下一个节点 c01n003 
+rpower c01n001 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n001 off， 然后开始下一个节点 c01n002
+rpower c01n002 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n002 off，然后开始下一个节点 c01n003
 。。。。。。。
 rpower c01n010 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n010 off
 
@@ -511,9 +514,8 @@ node,interface,mac,comments,disable
 ./thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”
 -- 在shell B中重启这些节点
 rpower c01n0[01-010] off
-rpower c01n0[01-010] on 
+rpower c01n0[01-010] on
 -- 在shell A中观察deploy的过程
 
 #附录4. 通过BMC设置bootorder (可选)
 ssh 登录到节点的BMC，通过asu set BootOrder.BootOrder “CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network”来设置bootorder。
-
