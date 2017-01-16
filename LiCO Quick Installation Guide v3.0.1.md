@@ -28,7 +28,7 @@ To install RedHat, just download one ISO file, since both head node and yum sour
 >
 >ftp://10.240.208.41/Releases/ 
 
-#2. If install on an existed Cluster, please reference Appendix 2
+#2. For installation on an existed Cluster, please reference Appendix 2
 
 LiCO support installing Web server on an existed cluster, but it still needs to meet some minimum requirements, please reference Appendix 2 for more information.  
 
@@ -47,7 +47,7 @@ Manually config IMM IP and Create IPMI account.
 
 ###Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for Head node.
 
->**NOTE:** 
+>**NOTES:** 
 
 >1. If you are using CentOS, please download image CentOS-*-DVD1.iso to install Head node.
 
@@ -63,9 +63,8 @@ Manually config IMM IP and Create IPMI account.
 
 > Public Network IP (optional, for remote access to Head node).
 
-Edit "/etc/sysconfig/network-scripts/eth*" or "/etc/sysconfig/network-scripts/ib*" to setup network card. 
-[RUI] Errata, In Red Hat Linux, it uses files ifcfg-ethX for different network interface configuration. 
-[RUI] What is IB? What is the difference>
+Edit "/etc/sysconfig/network-scripts/ifcfg-ethX" 
+or "/etc/sysconfig/network-scripts/ifcfg-ibX" to setup network card. 
 
     ONBOOT=yes
     NM_CONTROLLED=no
@@ -75,9 +74,10 @@ Edit "/etc/sysconfig/network-scripts/eth*" or "/etc/sysconfig/network-scripts/ib
     GATEWAY=10.240.212.1
 please use command below to restart network service. 
 
-    \#service network restart
+    #service network restart
 
 >**NOTE:**
+>
 >If using IB for Application network configuration, config will show ***fail*** when restart network service. You see this error because IB driver and service is not well installed, LiCO will take care of them later, So don't worry about it.   
 
 ###Step 4:  Copy LiCO package and extract it to a directory. 
@@ -85,6 +85,7 @@ please use command below to restart network service.
 ###Step 5:  copy OS ISO image to LiCO folder, e.g. "/lico_3.x/packages/os"
 
 >**NOTE:**
+>
 >If installing CentOS, please download CentOS-*-DVD.iso to LiCO folder, e.g. "/lico_3.x/packages/os".
 
 ###Step 6: Modify the configuration file
@@ -96,6 +97,7 @@ please use command below to restart network service.
     OSISO="CentOS-6.5-x86_64-DVD.iso" # ISO image filename 
 
 >**NOTE:**
+>
 >Both CentOS6.5/6.8 and Red Hat 6.5/6.8 is supported by LiCO. If you are using RedHat, use following configuration. 
 
     OS="rhels6.5"#OS version
@@ -105,10 +107,12 @@ please use command below to restart network service.
 
     [root@mgt ~]# cd /lico_3.x/setup/
     [root@mgt ~]#./0_upgrade_head_node_kernel.sh（don't execute thie command through ssh, execute it locally. ）
-    ***Reboot***
+   ***Reboot***
 
 ###Step 8: Config Network
+
 >**NOTE:**
+>
 >There is no BMC network configuration in following config sample. If you are using BMC network, please make sure your Head node has access to BMC network. 
 
 >If there is no "Login" node in cluster, there is no need to config "public network".
