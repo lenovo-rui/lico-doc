@@ -7,9 +7,8 @@ LiCO Quick Installation Guide v3.0.1
 
 #1. Download the Package
 
-##1.	Download OS and Installation files下载操作系统安装文件
+##Download OS and Installation files
 LiCO support CentOS 6.5/6.8 and RedHat 6.5/6.8. If required system is CentOS, please download both CentOS-*-DVD1.iso ( for head node installation) and CentOS-*-DVD.iso ( for LiCO yum source)  from team's FTP.  
-LiCO支持的操作系统版本是CentOS 6.5/6.8和Redhat 6.5/6.8。如果要安装的操作系统是CentOS, 从开发team的ftp上需要下载两个CentOS的iso文件，其中CentOS-*-DVD1.iso用来安装头节点的操作系统，CentOS-*-DVD.iso用来在LiCO中作为yum 源。
 
 >**System Package URL**
 >
@@ -19,50 +18,43 @@ LiCO支持的操作系统版本是CentOS 6.5/6.8和Redhat 6.5/6.8。如果要安
 >ftp://10.240.208.41/packages/CentOS-6.8-x86_64-DVD.iso
 
 If user is going to install RedHat, user just needs to download one ISO file, since both head node and yum source are packaged in a single ISO file.  
-如果要安装的操作系统是redhat，需要用户提供redhat的iso文件，安装头结点的iso文件和作为LiCO的yum源的文件是同一个iso，因此只需要一个iso文件。
 
-##2.Download LiCO 下载LiCO
+##Download LiCO 下载LiCO
 
->**LiCO  Package URL 下载地址**
+>**LiCO  Package URL**
 >
 >ftp://10.240.208.41/Releases/ 
 
-#2. If install on an existed Cluster, please reference Appendix 2. 如果集群已经存在，请参考附录2
+#2. If install on an existed Cluster, please reference Appendix 2
 
 LiCO support installing Web server on an existed cluster, but it still needs to meet some minimum requirements, please reference Appendix 2 for more information.  
-LiCO支持集群已经存在的情况下部署LiCO的web界面。当然已经存在的集群还是要满足一定的要求，请直接参考附录2。
 
-#3. Config IMM IP and create IPMI account for nodes in cluster 配置集群中节点的IMM IP并创建IPMI账号
+#3. Config IMM IP and create IPMI account for nodes in cluster
 
-Manually config IMM IP and Create IPMI account. 
-手动配置IMM IP并创建IPMI账号
+Manually config IMM IP and Create IPMI account.
 
 >**NOTES:**
 >
->1. IMM and IPMI account is the same for Rack Server and Next Scale, so user does not need to create the account for each of them. But for Flex server, user needs to create IPMI account separately. 对于RackServer和NextScale，IMM的账号和IPMI账号是一个账号，因此不需要单独创建IPMI账号，但是对于Flex Server来说，IPMI账号需要单独创建。
->2. If Flex Server is setup up with IMM IP and IPMI account, we will treat Flex Server as Rack Server.  Flex Server设置过imm的ip和创建ipmi账号以后，我们后续是将Flex server当做Rack Server 一样看待的。
+>1. IMM and IPMI account is the same for Rack Server and Next Scale, so user does not need to create the account for each of them. But for Flex server, user needs to create IPMI account separately.
+>2. If Flex Server is setup up with IMM IP and IPMI account, we will treat Flex Server as Rack Server.
 
-#4. Install Head Node 安装头节点
-- Step 0: Config raid of Head node, Raid1 is suggested. Skip if the raid is already reconfigured.  配置头结点的Raid，建议为raid1，如果已经配置，请忽略。
-- Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for Head node. 安装头节点OS( Centos6.5/6.8或者Redhat6.5/6.8）
+#4. Install Head Node
+- Step 0: Config raid of Head node, Raid1 is suggested. Skip if the raid is already reconfigured.
+- Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for Head node.
 
 >**NOTE:** 
->1. If you are using CentOS, please download image CentOS-*-DVD1.iso to install Head node.  如果Centos，使用下载的CentOS-*-DVD1.iso安装头节点的操作系统。
->2. Please select English as the System language. 头结点系统请选择英文。
+>1. If you are using CentOS, please download image CentOS-*-DVD1.iso to install Head node.
+>2. Please select English as the System language.
 
-- Step 2:  Config hostname of Head node. Open "/etc/sysconfig/network" and change hostname to "mgt". 设置头节点的hostname, 在/etc/sysconfig/network中设置头节点hostname为mgt
+- Step 2:  Config hostname of Head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
 
-- Step 3: Setup IP of Head node's network card. There will be 3 IP addresses for a Head node.  设置头节点网卡的ip地址，头节点包括3个ip：
-Management Network (OS) IP, like 172.20.0.1
-Application Network IP, like 172.22.0.1
-Public Network IP (optional, for remote access to Head node). 
-  
-用于management-network（os）的ip，比如172.20.0.1
-用于application-network的ip,比如172.22.0.1
-用于public-network的ip地址，public ip是可选的，可以不设置，public ip用于在远程访问头结点。
+- Step 3: Setup IP of Head node's network card. There will be 3 IP addresses for a Head node.
+
+    Management Network (OS) IP, e.g. 172.20.0.1
+    Application Network IP, e.g. 172.22.0.1
+    Public Network IP (optional, for remote access to Head node). 
 
 Edit "/etc/sysconfig/network-scripts/eth*" or "/etc/sysconfig/network-scripts/ib*" to setup network card. 
-编辑/etc/sysconfig/network-scripts/eth* 或者 /etc/sysconfig/network-scripts/ib*来设置ip地址。
 [RUI] Errata, In Red Hat Linux, it uses files ifcfg-ethX for different network interface configuration. 
 [RUI] What is IB? What is the difference>
 
