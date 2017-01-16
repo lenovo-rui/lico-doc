@@ -283,15 +283,15 @@ Apply following steps to install lustre for your cluster:
     	datanet_hostnamemap io01:io01-data,io02:io02-data	#the map between normal nodename and nodename for interface
     	mds {
     	   io01    /dev/sdb1    #hard disk, you can use fdisk or parted to check or re-layout the partitions
-    io02    /dev/sdb1	
+           io02    /dev/sdb1	
     	};
     	oss {
     		io01    /dev/sdb2
-    io02    /dev/sdb2
+    		io02    /dev/sdb2
     	};
-         #### The following items is NOT required to input if no HA required.	###
+         #### The following items is NOT required to input if no HA required.###
     	 ha_heartbeat_net {
-    		io01[eth1,192.168.1.11,255.255.255.0]:io02[eth1,192.168.1.12,255.255.255.0] 
+    	 io01[eth1,192.168.1.11,255.255.255.0]:io02[eth1,192.168.1.12,255.255.255.0] 
     	 };
     	 ha_mdt {
     	  io01:io02
@@ -307,11 +307,11 @@ User following script to install lustre.
 
     [root@mgt bin]# ./lustre_setup.py
 
-After installation, issue following command to check if share folder is correctly mounted. 
+After installation, issue following command to check if share folder is correctly mounted or not. 
 
     [root@mgt bin]# df –h
 
-# 7.	安装ldap来管理集群用户
+# 7.	Install LDAP to Manage Users of Cluster
 LiCO集群用户管理采用ldap来实现
 用ldap来管理集群用户又分为两种：1.在hpc集群中使用我们的脚本搭建ldap环境， 2使用已经存在的外部ldap。我们推荐第一种方式，使用lico的脚本在hpc集群中搭建ldap环境：
 
