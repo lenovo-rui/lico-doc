@@ -164,14 +164,15 @@ Check the configuration of Head node:
 
 #5.	Deploy Cluster
 
-###Modify Cluster configuration file
+###Step 1: Modify Cluster configuration file
 Please reference Appendix 1
 
-###Add node to xcat 
+###Step 2: Add node to xcat 
 
->[root@mgt bin]# ./add_nodes.py
+    [root@mgt bin]# ./add_nodes.py
+
  
-###Config Raid of Node
+###Step 3: Config Raid of Node
 Remotely connect to IMM of the node through ssh channel, and use following command to configure the Raid. Skip if Raid was already configured. 
 
     system> storage -config vol -add -R 1 -D disk[9-0]:disk[9-1] -target ctrl[9]
@@ -182,14 +183,14 @@ Remotely connect to IMM of the node through ssh channel, and use following comma
 >
 >This command of Raid configuration is only supported by m5 machine, please use UEFI for other type of machines.
 
-###Retrieve MAC Addresses of Nodes (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment)
+###Step 4: Retrieve MAC Addresses of Nodes (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment)
 
 Use following command to get mac addresses of all nodes. The results of mac addresses returned are stored in macs.txt (folder path is: "/lico_3.x/bin/"). 
 The first NIC is  marked as "selectednic" by default. You can change it to the NIC which you used to install OS, the NIC you used should be connected to Management Network.
 
     [root@mgt bin]# ./discover_node_macs_using_imm.py --node "nodes1,nodes2,node[3-5]" --immuser "USERID" --immpwd "Passw0rd"
 
-Here is the content of a macx.txt: 
+Here is a sample of a macx.txt: 
 
     Node1;
       selectednic=PXE.NicPortMacAddress.1;
@@ -205,11 +206,11 @@ Here is the content of a macx.txt:
       PXE.NicPortMacAddress.3=00:00:C9:F5:6D:10;
       PXE.NicPortMacAddress.4=00:00:C9:F5:6D:14
 
-Use following command to add selected NIC to database of xcat, after finishing editing of macx.txt. 
+Use following command to add selected NIC to database of xcat, after finished editing macx.txt. 
 
     [root@mgt bin]# ./set_node_mac_in_xcat.py -c "macs.txt"
 
-###Deploy Node (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment) 
+###Step 5: Deploy Node (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment) 
 
 User following scripts to deploy nodes:
 
@@ -218,6 +219,7 @@ User following scripts to deploy nodes:
 >**NOTE:**
 >
 >When meeting problems below, press 'ctrl+c' to termindate, then re-run the scripts. 
+>
 >`Error: Unable to find an IP for c01n001-data in hosts table or via system lookup (i.e. /etc/hosts)`
 
 
@@ -230,15 +232,15 @@ User following scripts to deploy nodes:
 Please use following commands to check if all nodes are deployed successfully. 
 
     [root@mgt bin]# ./service_manager.py  --check torque [root@mgt bin]#
-    ./service_manager.py  --check ganglia [root@mgt bin]#
-    ./service_manager.py  --check clusterping [root@mgt bin]#
-    ./service_manager.py  --check mpi
+    [root@mgt bin]# ./service_manager.py  --check ganglia [root@mgt bin]#
+    [root@mgt bin]# ./service_manager.py  --check clusterping [root@mgt bin]#
+    [root@mgt bin]# ./service_manager.py  --check mpi
 
 Please login to ganglia and check if ganglia is correctly deployed. 
 
     http://172.20.0.1/ganglia
 
-###Rename Application NIC of a Node (optional)
+###Step 6: Rename Application NIC of a Node (optional)
 
 > **NOTE:**
 > 
