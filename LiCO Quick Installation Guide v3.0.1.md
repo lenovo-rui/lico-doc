@@ -231,9 +231,9 @@ User following scripts to deploy nodes:
 
 Please use following commands to check if all nodes are deployed successfully. 
 
-    [root@mgt bin]# ./service_manager.py  --check torque [root@mgt bin]#
-    [root@mgt bin]# ./service_manager.py  --check ganglia [root@mgt bin]#
-    [root@mgt bin]# ./service_manager.py  --check clusterping [root@mgt bin]#
+    [root@mgt bin]# ./service_manager.py  --check torque
+    [root@mgt bin]# ./service_manager.py  --check ganglia 
+    [root@mgt bin]# ./service_manager.py  --check clusterping 
     [root@mgt bin]# ./service_manager.py  --check mpi
 
 Please login to ganglia and check if ganglia is correctly deployed. 
@@ -265,20 +265,24 @@ Use "Reboot" to reboot Head node.
 >
 >- Please check whether config is applied successfully after reboot.
 
-#6. 安装分布式文件系统lustre
-如果集群要使用的分布式文件系统不是lustre，请忽略此步骤。
-如果采用lustre文件系统，请遵循以下步骤：
+#6. Install Lustre, a parallel file system
 
-### 1. 修改配置文件
->[root@mgt setup]# vi ../etc/lustre.conf
+>**NOTE:**
+>
+>Skip this part if your cluster will not use lustre.
+
+Apply following steps to install lustre for your cluster: 
+### Step 1: Modify Lustre Configuration File
+
+    [root@mgt setup]# vi ../etc/lustre.conf
 
     file-system userfs {
     	interface       ibdata	 #application nic
-    	shareddir       /share  #lustre部署好以后，提供的共享目录名称，不需要事先创建
+    	shareddir       /share  #lustre will provide share folder name, you don't need to create it now.
         datanet_type	 Infiniband  #Infiniband or Ethernet for interface
     	datanet_hostnamemap io01:io01-data,io02:io02-data	#the map between normal nodename and nodename for interface
     	mds {
-    	   io01    /dev/sdb1    #硬盘，在io01上通过fdisk或parted查看或分区
+    	   io01    /dev/sdb1    #hard disk, you can use fdisk or parted to check or re-layout the partitions
     io02    /dev/sdb1	
     	};
     	oss {
@@ -297,10 +301,15 @@ Use "Reboot" to reboot Head node.
     	 };
     }
 
-###2. 安装lustre
->[root@mgt bin]# ./lustre_setup.py
+###Step 2: Install Lustre
 
-安装后检查是否安装成功。df –h 查看/share是否已经挂载。
+User following script to install lustre.
+
+    [root@mgt bin]# ./lustre_setup.py
+
+After installation, issue following command to check if share folder is correctly mounted. 
+
+    [root@mgt bin]# df –h
 
 # 7.	安装ldap来管理集群用户
 LiCO集群用户管理采用ldap来实现
