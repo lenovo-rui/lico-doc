@@ -22,7 +22,7 @@ LiCO support CentOS 6.5/6.8 and RedHat 6.5/6.8. If required system is CentOS, pl
 
 To install RedHat, just download one ISO file, since both head node and yum source are packaged in a single ISO file.  
 
-##Download LiCO
+##Download LiCO package
 
 >**LiCO  Package URL**
 >
@@ -53,7 +53,10 @@ Manually config IMM IP and Create IPMI account.
 
 >2. Please select English as the System language.
 
-###Step 2:  Config hostname of Head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
+###Step 2: Config hostname of Head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
+
+    NETWORKING=yes
+    HOSTNAME=mgt
 
 ###Step 3: Setup IP of Head node's network card. There will be 3 IP addresses for a Head node.
 
@@ -64,7 +67,7 @@ Manually config IMM IP and Create IPMI account.
 > Public Network IP (optional, for remote access to Head node).
 
 Edit "/etc/sysconfig/network-scripts/ifcfg-ethX" 
-or "/etc/sysconfig/network-scripts/ifcfg-ibX" to setup network card. 
+or "/etc/sysconfig/network-scripts/ifcfg-ibX" to setup network card. (replace X with the number of the network card, e.g. ifcfg-eth1)
 
     ONBOOT=yes
     NM_CONTROLLED=no
@@ -80,9 +83,9 @@ please use command below to restart network service.
 >
 >If using IB for Application network configuration, config will show ***fail*** when restart network service. You see this error because IB driver and service is not well installed, LiCO will take care of them later, So don't worry about it.   
 
-###Step 4:  Copy LiCO package and extract it to a directory. 
+###Step 4: Copy LiCO package and extract it to a directory. 
 
-###Step 5:  copy OS ISO image to LiCO folder, e.g. "/lico_3.x/packages/os"
+###Step 5: Copy OS ISO image to LiCO folder, e.g. "/lico_3.x/packages/os"
 
 >**NOTE:**
 >
@@ -99,15 +102,14 @@ please use command below to restart network service.
 >**NOTE:**
 >
 >Both CentOS6.5/6.8 and Red Hat 6.5/6.8 is supported by LiCO. If you are using RedHat, use following configuration. 
-
-    OS="rhels6.5"#OS version
-    OSISO="RHEL6.5-20131111.0-Server-x86_64-DVD1.iso"  #ISO Image filename
+>`OS="rhels6.5"#OS version` 
+>`OSISO="RHEL6.5-20131111.0-Server-x86_64-DVD1.iso"  #ISO Image filename`
 
 ###Step 7: Update Kernel of Head Node
 
     [root@mgt ~]# cd /lico_3.x/setup/
     [root@mgt ~]#./0_upgrade_head_node_kernel.sh（don't execute thie command through ssh, execute it locally. ）
-   ***Reboot***
+    Reboot
 
 ###Step 8: Config Network
 
@@ -145,7 +147,7 @@ please use command below to restart network service.
         staticrange     10.240.212.29-10.240.212.40		# Note: It must match the customer network environment
     }
     
-- Step 9: Setup Head Node
+###Step 9: Setup Head Node
 
     [root@mgt setup]# ./1_head_node_setup.sh （don't execute thie command through ssh, execute it locally.）
     [root@mgt setup]# ssh mgt（ssh Head node itself）
@@ -157,6 +159,7 @@ Check the configuration of Head node:
     [root@mgt bin]# ./service_manager.py --check head
 
 【是否需要让用户查看一些点，如果不ok就算失败？或者不存在这种情况】
+
 [IMHO] we should automatically check all nodes we config'ed, asynchronously. If there is any failure or problem, report to admin console.  
 
 #5.	Deploy Cluster部署集群
