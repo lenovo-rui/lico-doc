@@ -437,60 +437,60 @@ Here is a sample folder structure for use hpcadmin:
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
 Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
 
-![enter image description here](http://excel.jpg)
+![nodes.csv sample file](https://github.com/lenovo-rui/lico-doc/resources/nodes_csv.png)
 
 Part 1: Room Information, we support one room only for current release. 
 
- - name: room name
- - location_description: room location description
+ - ***name***: room name
+ - ***location_description***: room location description
 
 Part 2: Logical Group of the Cluster (mandatory)
 
- - name: Logical Group name
+ - ***name***: Logical Group name
 
 Part 3: Row Information (mandatory), the row which host the nodes of cluster.
 
- - name: row name
- - index: integer, can't be same with cluster.
- - belonging_room: room information which the row is hosted. The name here must be same as specified in room.
+ - ***name***: row name
+ - ***index***: integer, can't be same with cluster.
+ - ***belonging_room***: room information which the row is hosted. The name here must be same as specified in room.
 
 Part 4: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
 
- - name: rack name
- - belonging_row: the row which rack is sitting, the row name must be one of row name specified in Part 3. 
- - column: the column the rack is sitting, integer, can't be duplicated with the row.
+ - ***name***: rack name
+ - ***belonging_row***: the row which rack is sitting, the row name must be one of row name specified in Part 3. 
+ - ***column***: the column the rack is sitting, integer, can't be duplicated with the row.
 
 Part 5: Chassis Information (optional), must be specified if there is chassis in cluster
 
- - name: chassis name 
- - belonging_rack: the rack name which chassis belongs to. the rack name must be one of the racks in Part 4. 
- - location: location of chassis, it indicates which u the chassis is in，it is an integer value between 1-42. 
- - machine_type: type of the chassis, either Flex_Chassis or Nextscale_Chassis. If the machine is Nextscale, use Nextscale_Chassis; if the machine is Flex, use Flex_Chassis.
+ - ***name***: chassis name 
+ - ***belonging_rack***: the rack name which chassis belongs to. the rack name must be one of the racks in Part 4. 
+ - ***location***: location of chassis, it indicates which u the chassis is in，it is an integer value between 1-42. 
+ - ***machine_type***: type of the chassis, either Flex_Chassis or Nextscale_Chassis. If the machine is Nextscale, use Nextscale_Chassis; if the machine is Flex, use Flex_Chassis.
 
 Part 6: Switch Information (optional) 
 Generally, we don't specify any information here.
 
 Part 7: Server Information (mandatory)
 
- - name: server's hostname without domain name
- - nodetype: type of the server, can be one of following node types: head,compute,io,gpu,login. 
- - immip: IP address of the IMM in node.
- - hostip: IP address for management network
- - machine_type: type of the node server, valid value is listed in lico_3.x/etc/ nodes_image_conf.yaml. The images of the node can be found at lico_3.x/etc/ nodes_image.
- - ipmi_user: IPMI account of the server.
- - ipmi_pwd: IPMI password of the server.
- - belonging_rack: the rack name which server is sitting. 
- - belonging_chassis: the chassis name which server belongs to. The chassis name must be one of chassis listed in Part 5. If server does not belong to any chassis, leave it empty. 
- - location_u: server localtion, if server belongs to a chassis, this value means the slot in chassis, otherwise it means u in rack.
- - width: width of the server, full width is 1, half width is 0.5.
- - heigh: height of the server, value is counted in u.
- - groups: group name which the server belongs to, the value must be the one specified in Part 2. A server can belongs to multiple groups, separated the groups by comma.
- - application_network: IP address for application network.
- - application_network_nic: network card for application network.
- - application_network_type: type of application network, can be either Ethernet or Infiniband.
- - public_network: specify when nodetype is login, it is the IP address exposed to public network.
- - public _network_nic: specify when nodetype is login, it is the card for public network.
- - public _network_type: specify when nodetype is login, it is the public network type, the value can be either Ethernet or Infiniband.
+ - ***name***: server's hostname without domain name
+ - ***nodetype***: type of the server, can be one of following node types: head,compute,io,gpu,login. 
+ - ***immip***: IP address of the IMM in node.
+ - ***hostip***: IP address for management network
+ - ***machine_type***: type of the node server, valid value is listed in lico_3.x/etc/ nodes_image_conf.yaml. The images of the node can be found at lico_3.x/etc/ nodes_image.
+ - ***ipmi_user***: IPMI account of the server.
+ - ***ipmi_pwd***: IPMI password of the server.
+ - ***belonging_rack***: the rack name which server is sitting. 
+ - ***belonging_chassis***: the chassis name which server belongs to. The chassis name must be one of chassis listed in Part 5. If server does not belong to any chassis, leave it empty. 
+ - ***location_u***: server localtion, if server belongs to a chassis, this value means the slot in chassis, otherwise it means u in rack.
+ - ***width***: width of the server, full width is 1, half width is 0.5.
+ - ***heigh***: height of the server, value is counted in u.
+ - ***groups***: group name which the server belongs to, the value must be the one specified in Part 2. A server can belongs to multiple groups, separated the groups by comma.
+ - ***application_network***: IP address for application network.
+ - ***application_network_nic***: network card for application network.
+ - ***application_network_type***: type of application network, can be either Ethernet or Infiniband.
+ - ***public_network***: specify when nodetype is login, it is the IP address exposed to public network.
+ - ***public _network_nic***: specify when nodetype is login, it is the card for public network.
+ - ***public _network_type***: specify when nodetype is login, it is the public network type, the value can be either Ethernet or Infiniband.
 
 #Appendix 2. 集群已经存在的情况下部署LiCO web portal
 以下操作在头节点进行。
