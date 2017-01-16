@@ -103,6 +103,7 @@ please use command below to restart network service.
 >
 >Both CentOS6.5/6.8 and Red Hat 6.5/6.8 is supported by LiCO. If you are using RedHat, use following configuration. 
 >`OS="rhels6.5"#OS version` 
+>
 >`OSISO="RHEL6.5-20131111.0-Server-x86_64-DVD1.iso"  #ISO Image filename`
 
 ###Step 7: Update Kernel of Head Node
@@ -117,7 +118,10 @@ please use command below to restart network service.
 >
 >There is no BMC network configuration in following config sample. If you are using BMC network, please make sure your Head node has access to BMC network. 
 
->If there is no "Login" node in cluster, there is no need to config "public network".
+>If there isn't "Login" node in cluster,  you don't need to config "public network".
+
+[RUI] What's the different between dynamic range and static range in config?
+[RUI] Why application network does not require dynamic range
 
     [root@mgt ~]# cd /lico_3.x/etc/
     [root@mgt etc]# vi networks.conf   
@@ -149,18 +153,16 @@ please use command below to restart network service.
     
 ###Step 9: Setup Head Node
 
+    [root@mgt ~]# cd /lico_3.x/setup/
     [root@mgt setup]# ./1_head_node_setup.sh （don't execute thie command through ssh, execute it locally.）
     [root@mgt setup]# ssh mgt（ssh Head node itself）
 
-Check the configuration of Head node: 
+Check configuration of Head node: 
 
     [root@mgt setup]# source /etc/profile.d/xcat.sh
-    [root@mgt setup]# cd /lico_3.x/bin/
+    [root@mgt setup]# cd ~/lico_3.x/bin/
     [root@mgt bin]# ./service_manager.py --check head
 
-【是否需要让用户查看一些点，如果不ok就算失败？或者不存在这种情况】
-
-[IMHO] we should automatically check all nodes we config'ed, asynchronously. If there is any failure or problem, report to admin console.  
 
 #5.	Deploy Cluster
 
@@ -303,7 +305,7 @@ Apply following steps to install lustre for your cluster:
 
 ###Step 2: Install Lustre
 
-User following script to install lustre.
+Use following script to install lustre.
 
     [root@mgt bin]# ./lustre_setup.py
 
@@ -311,46 +313,68 @@ After installation, issue following command to check if share folder is correctl
 
     [root@mgt bin]# df –h
 
-# 7.	Install LDAP to Manage Users of Cluster
-LiCO集群用户管理采用ldap来实现
-用ldap来管理集群用户又分为两种：1.在hpc集群中使用我们的脚本搭建ldap环境， 2使用已经存在的外部ldap。我们推荐第一种方式，使用lico的脚本在hpc集群中搭建ldap环境：
+# 7.	Install LDAP to Manage Users of a Cluster
+LiCO utilize LDAP to manage users of a cluster
+There are 2 scenarios :
 
-### 1. 使用脚本创建ldap服务：
+ 1. use the script to build a new ldap environment 
+ 2. use LiCO in an existed ldap environment
 
-> [root@mgt packages/openldap]# tar -xvf openldap.tar [root@mgt
-> openldap]# cd openldap [root@mgt openldap]# ./setup_openldap.sh
-> 172.20.0.1(头节点的ip)
+We strongly suggest using LiCO script to build a new ldap environment for HPC cluster and here are steps:
 
+###Step 1: Use script to create LDAP service
 
-至此头节点上已经安装ldap的服务，同时集群中所有节点上安装了ldap的客户端。
+    [root@mgt packages/openldap]# tar -xvf openldap.tar 
+    [root@mgt openldap]# cd openldap 
+    [root@mgt openldap]# ./setup_openldap.sh 172.20.0.1(ip of head node)
 
-> **Note：**安装好ldap环境以后需要重启torque相关的服务。
-> [root@mgt  bin]#./service_manager.py --restart torque
+After finishing the scripts above, you have LDAP service installed on Head node and have LDAP client installed for all other nodes. 
 
-### 2. 修改配置文件 /lico_3.x/etc/conf.yaml
->[root@mgt etc] vi conf.yaml
+> **Note:**
+> 
+> You need to restart torque related service after installing LDAP environment. 
 
-配置如下：
+User following script to restart torque:
+
+    [root@mgt  bin]#./service_manager.py --restart torque
+
+###Step 2: Modify Configuration File 
+
+Change "/lico_3.x/etc/conf.yaml" as following:
+
+    [root@mgt etc] vi conf.yaml
 
     user_management_method: ldap
     ldap_user_home_base: /share1/users_home
-    ldap_server: 172.20.0.1(头节点的ip)
+    ldap_server: 172.20.0.1(ip of head node)
     user_rootdir: /share1/users_root
     cluster_sharedir: [“/share2”]
 
-user_home_base：user_home_base是指ldap用户的home所在的目录，user_home_base必须是一个能共享访问的目录。
-user_rootdir：user_rootdir是ldap用户的根目录，也即用户在web页面上看到的顶级目录。user_rootdir也必须是一个能共享访问的目录。
-cluster_sharedir：cluster_sharedir设置集群中除了user_home_base和user_rootdir以外的其他的共享目录。
+user_home_base：user_home_base is the home directory of a LDAP user, and it must be shared across the cluster.
 
-> **Note：**以上这些共享目录必须在系统中已经存在，同时要注意，如果是使用的nfs作为共享文件系统，必须使用vers=3，比如：mount -t nfs -o  vers=3 nfsserverip:/share  /share
+user_rootdir：user_rootdir is the root folder of a LDAP user, as known as the root foder for web page. user_rootdir must be shared across the cluster.
+是ldap用户的根目录，也即用户在web页面上看到的顶级目录。user_rootdir也必须是一个能共享访问的目录。[RUI] 什么人可以共享访问，需要设定什么样的权限？
 
+cluster_sharedir：cluster_sharedir is the shared folder of a cluster besides user_home_base and user_rootdir.
+
+> **Note：**
+> 
+> The shared folders listed above must exist in system. If using nfs as the shared file system, nfs version must be version 3. 
+> Use following command to mount version 3 nfs folder: 
+> `mount -t nfs -o  vers=3 nfsserverip:/share  /share`
+
+Here is a sample folder structure for use hpcadmin: 
 例如系统中创建一个用户hpcadmin，其目录如下：
 
-/share1/users_root/hpcadmin用户的根目录，也即web上显示的最顶层目录
-/share1/users_root/hpcadmin/home 软连接到用户的home目录 
-/share1/users_root/hpcadmin/share2软连接到sharedir
-/share1/users_home/hpcadmin用户的home目录
-/share2sharedir
+> /share1/users_root/hpcadmin <-root directory of hpcadmin, aka the root folder for web. 用户的根目录，也即web上显示的最顶层目录
+> 
+> /share1/users_root/hpcadmin/home <- symbolic link to user's home directory 软连接到用户的home目录 
+> 
+> /share1/users_root/hpcadmin/share2 <- symbolic link to user's sharedir
+> 
+> /share1/users_home/hpcadmin <- home directory of the user
+> 
+> /share2 <- public shared folder: sharedir
 
 #8.	安装LiCO的web portal
 
@@ -409,52 +433,66 @@ cluster_sharedir：cluster_sharedir设置集群中除了user_home_base和user_ro
 
 ![enter image description here](http://image.jpg)
 
-#附录1. 集群节点配置文件nodes.csv的编辑
-将头结点上文件/lico_3.*/etc/nodes.csv拷贝到本地笔记本上用excel打开进行编辑, 编辑好以后覆盖头节点上的/lico_3.*/etc/nodes.csv
+#Appendix 1. Modify Cluster Configuration file: nodes.csv
+Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
+Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
 
 ![enter image description here](http://excel.jpg)
 
-第一部分填写机房信息（必填）： 现在只支持填写一个机房。
--name：机房名字。
--location_description ：机房位置描述。
-第二部分填写集群的逻辑组（必填）：
--name：逻辑组的名字。
-第三部分填写机房的行信息（必填） ： 只需填写集群节点所在的行。
--name：行的名字。
--index：任意正整数，index不能重复。
--belonging_room：行所在的机房这里填写的值必须在机房信息里面的name里面存在。
-第四部分填写机架信息（必填）：只需填写集群节点占用的机架。
--name：机架的名字。
--belonging_row：机架所属的行，这里填写的值必须在机房行信息的name里面存在。
--column：机架所在的列，任意正整数，同一行内这个值不能重复。
-第五部分填写chassis信息(选填)：如果集群中有chassis需要填写chassis信息。
--name：chassis名字。
--belonging_rack：chassis所属机架，这里填写的值必须在机架信息的name里面存在。
--location：chassis的位置，表示chassis的底端在机架的第几u，值应该在 1-42之间。
--machine_type： chassis的类型。可选类型为值有Flex_Chassis或Nextscale_Chassis。Nextscale的机器用Nextscale_Chassis, Flex的机器用Flex_Chassis。
-第六部分填写交换机信息(选填)：通常这里不用填任何信息。
-第七部分填写服务器信息(必填)：
--name：服务器的hostname，不带域名。
--nodetype：服务器的类型，可选类型为head,compute,io,gpu,login中的一种，head表示这个节点是头节点，compute表示这个节点是计算节点，gpu表示这个节点是gpu节点，io表示这个节点是io节点，login表示这个节点是登录节点。
--immip：节点imm的ip地址。
--hostip：节点管理网络的ip地址。
--machine_type：服务器型号，可用值列在lico_3.x/etc/ nodes_image_conf.yaml中，这些服务器型号对应的图片可以在lico_3.x/etc/ nodes_image下查看。
--ipmi_user ：服务器的ipmi账号。
--ipmi_pwd ：服务器的ipmi密码。
--belonging_rack：服务器所属的机架，这里填写的值必须在机架信息的name里面存在。
--belonging_chassis：服务器所属的chassis，如果机器属于某一chassis，这里需要填写chassis的名字，填写的值必须在chassis信息的name里面存在。如果服务器不属于chassis，这个值可以空着。
--location_u：服务器的位置，如果服务器属于某一chassis，这里的值表示机器在chassis里面的槽位，如果机器不属于chassis，这里的值表示机器在机架中的u位置。
--width：服务器的宽度，全宽是1，半宽是0.5。
--heigh：服务器的高度，值表示高度是多少u。
--groups：服务器所属的组，这里填写的值必须在组信息的name里面存在。一个机器可以属于多个组，多个组之间用逗号分开。
--application_network ：服务器的数据网的ip地址。
--application_network_nic ：服务器的数据网的网卡。
--application_network_type ：服务器的数据网的类型，Ethernet或者Infiniband。
--public_network ：只有nodetype为login的节点需要填写，表示服务器的公网的ip地址。
--public _network_nic : 只有nodetype为login的节点需要填写，表示服务器的公网的网卡。
--public _network_type : 只有nodetype为login的节点需要填写，表示服务器的公网的类型，Ethernet或者Infiniband。
+Part 1: Room Information, we support one room only for current release. 
 
-#附录2. 集群已经存在的情况下部署LiCO web portal
+ - name: room name
+ - location_description: room location description
+
+Part 2: Logical Group of the Cluster (mandatory)
+
+ - name: Logical Group name
+
+Part 3: Row Information (mandatory), the row which host the nodes of cluster.
+
+ - name: row name
+ - index: integer, can't be same with cluster.
+ - belonging_room: room information which the row is hosted. The name here must be same as specified in room.
+
+Part 4: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
+
+ - name: rack name
+ - belonging_row: the row which rack is sitting, the row name must be one of row name specified in Part 3. 
+ - column: the column the rack is sitting, integer, can't be duplicated with the row.
+
+Part 5: Chassis Information (optional), must be specified if there is chassis in cluster
+
+ - name: chassis name 
+ - belonging_rack: the rack name which chassis belongs to. the rack name must be one of the racks in Part 4. 
+ - location: location of chassis, it indicates which u the chassis is in，it is an integer value between 1-42. 
+ - machine_type: type of the chassis, either Flex_Chassis or Nextscale_Chassis. If the machine is Nextscale, use Nextscale_Chassis; if the machine is Flex, use Flex_Chassis.
+
+Part 6: Switch Information (optional) 
+Generally, we don't specify any information here.
+
+Part 7: Server Information (mandatory)
+
+ - name: server's hostname without domain name
+ - nodetype: type of the server, can be one of following node types: head,compute,io,gpu,login. 
+ - immip: IP address of the IMM in node.
+ - hostip: IP address for management network
+ - machine_type: type of the node server, valid value is listed in lico_3.x/etc/ nodes_image_conf.yaml. The images of the node can be found at lico_3.x/etc/ nodes_image.
+ - ipmi_user: IPMI account of the server.
+ - ipmi_pwd: IPMI password of the server.
+ - belonging_rack: the rack name which server is sitting. 
+ - belonging_chassis: the chassis name which server belongs to. The chassis name must be one of chassis listed in Part 5. If server does not belong to any chassis, leave it empty. 
+ - location_u: server localtion, if server belongs to a chassis, this value means the slot in chassis, otherwise it means u in rack.
+ - width: width of the server, full width is 1, half width is 0.5.
+ - heigh: height of the server, value is counted in u.
+ - groups: group name which the server belongs to, the value must be the one specified in Part 2. A server can belongs to multiple groups, separated the groups by comma.
+ - application_network: IP address for application network.
+ - application_network_nic: network card for application network.
+ - application_network_type: type of application network, can be either Ethernet or Infiniband.
+ - public_network: specify when nodetype is login, it is the IP address exposed to public network.
+ - public _network_nic: specify when nodetype is login, it is the card for public network.
+ - public _network_type: specify when nodetype is login, it is the public network type, the value can be either Ethernet or Infiniband.
+
+#Appendix 2. 集群已经存在的情况下部署LiCO web portal
 以下操作在头节点进行。
 1.	确保所有节点OS（Rhel6.5/Rhel6.8/CentOS6.5/CenOS6.8）已经安装好
 2.	确保节点间root账户可以无密码访问
