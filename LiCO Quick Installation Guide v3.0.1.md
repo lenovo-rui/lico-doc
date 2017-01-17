@@ -441,14 +441,28 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
 
 Part 1: Room Information, we support one room only for current release. 
 
+| room     | name  | location_description |
+| :------- | ----: | :------------------: |
+|          | room1 |  2nd floor           |
+
  - ***name***: room name
  - ***location_description***: room location description
 
 Part 2: Logical Group of the Cluster (mandatory)
+| group    | name    | 
+| :------- | :------ | 
+|          | bigmen  |
+|          | compute |
+|          | gpu     |
+|          | login   | 
 
  - ***name***: Logical Group name
 
 Part 3: Row Information (mandatory), the row which host the nodes of cluster.
+| row      | name  | index | belonging_room  |
+| :------- | ----: | :---: | :-------------: |
+|          | row1  |  1    | room1           |
+|          | row2  |  2    | room1           |        
 
  - ***name***: row name
  - ***index***: integer, can't be same with cluster.
@@ -456,11 +470,22 @@ Part 3: Row Information (mandatory), the row which host the nodes of cluster.
 
 Part 4: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
 
+| rack     | name  | column | belonging_row   |
+| :------- | ----: | :----: | :-------------: |
+|          | rack1 |  1     | row1            |
+|          | rack2 |  2     | row1            |
+|          | rack3 |  1     | row2            |  
+
  - ***name***: rack name
  - ***belonging_row***: the row which rack is sitting, the row name must be one of row name specified in Part 3. 
  - ***column***: the column the rack is sitting, integer, can't be duplicated with the row.
 
 Part 5: Chassis Information (optional), must be specified if there is chassis in cluster
+| chassis  | name      | belonging_rack | location   |  machine_type |
+| :------- | :-------: | :------------: | :--------: |  :----------: |
+|          | chassis1  |  rack1         | 7          | Flex_Chassis  |
+|          | chassis2  |  rack2         | 20         | Flex_Chassis  |
+|          | chassis3  |  rack1         | 7          | Nextscale_Chassis| 
 
  - ***name***: chassis name 
  - ***belonging_rack***: the rack name which chassis belongs to. the rack name must be one of the racks in Part 4. 
@@ -471,6 +496,11 @@ Part 6: Switch Information (optional)
 Generally, we don't specify any information here.
 
 Part 7: Server Information (mandatory)
+| node | name      | nodetype | immip         |  hostip    | machine_type  | ipmi_user | ipmi_pwd |  belonging_rack |  belonging_chassis  |  location_u  |  width | height | groups  | application_network | application_network_nic | application_network_nic_type | public_nic | public_nic_ip | public_nic_type |     
+| :--- | :-------: | :------: | :-----------: | :--------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | 
+|      | head      |  head    | 10.240.212.97 | 172.20.1.1 |  ibm  | USERID | PASSWORD | rack1 |     |  2 |  1  |  1 |  login | 172.22.0.100 |  eth1  | Ethernet  |  eth2  | 10.240.212.22  | Ethernet |
+|      | mgt       |  compute | 10.240.212.97 | 172.20.0.1 |  ibm  | xcat | Passw0rd  | rack1  |     | 3  | 1  | 1  |  compute  | 172.22.0.1  | eth1  | Ethernet  |  eth2  | 10.240.212.22  | Ethernet  |
+|      | compute1  |  compute | 10.240.212.97 | 172.20.1.2 |  ibm  | USERID | PASSWORD | rack1 |     |  4  |  1  |  1 |  compute  | 172.22.0.1 |  eth1  | Ethernet  |  eth2  | 10.240.212.22  | Ethernet |
 
  - ***name***: server's hostname without domain name
  - ***nodetype***: type of the server, can be one of following node types: head,compute,io,gpu,login. 
