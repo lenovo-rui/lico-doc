@@ -761,8 +761,11 @@ In console A, use command below:
 In console B, go to lico folder and try to setup nodes through pxe :
 
 >**NOTE:** If node uses uefi mode to boot, issue command below:
+>
 >`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”`
+>
 >**NOTE:** if node uses legacy mode to boot, issue command below:
+>
 >`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”`
 
 Monitoring the MAC discovery through following commands:
@@ -788,8 +791,11 @@ In console A, issue command below:
 When you see "monitor deploy status", issue following command in console B:
 
 >**NOTE:** If node uses uefi mode to boot, issue command below:
+>
 >`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”`
+>
 >**NOTE:** if node uses legacy mode to boot, issue command below:
+>
 >`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”`
 
 Then restart these node in console B:
