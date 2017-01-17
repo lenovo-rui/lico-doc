@@ -353,7 +353,10 @@ Change "/lico_3.x/etc/conf.yaml" as following:
 user_home_base：user_home_base is the home directory of a LDAP user, and it must be shared across the cluster.
 
 user_rootdir：user_rootdir is the root folder of a LDAP user, as known as the root foder for web page. user_rootdir must be shared across the cluster.
-是ldap用户的根目录，也即用户在web页面上看到的顶级目录。user_rootdir也必须是一个能共享访问的目录。[RUI] 什么人可以共享访问，需要设定什么样的权限？
+
+是ldap用户的根目录，也即用户在web页面上看到的顶级目录。user_rootdir也必须是一个能共享访问的目录。
+
+[RUI] 什么人可以共享访问，需要设定什么样的权限？
 
 cluster_sharedir：cluster_sharedir is the shared folder of a cluster besides user_home_base and user_rootdir.
 
@@ -363,12 +366,11 @@ cluster_sharedir：cluster_sharedir is the shared folder of a cluster besides us
 > Use following command to mount version 3 nfs folder: 
 > `mount -t nfs -o  vers=3 nfsserverip:/share  /share`
 
-Here is a sample folder structure for use hpcadmin: 
-例如系统中创建一个用户hpcadmin，其目录如下：
+Here is a sample folder structure for user hpcadmin: 
 
-> /share1/users_root/hpcadmin <-root directory of hpcadmin, aka the root folder for web. 用户的根目录，也即web上显示的最顶层目录
+> /share1/users_root/hpcadmin <-root directory of hpcadmin, aka the root folder for web. 
 > 
-> /share1/users_root/hpcadmin/home <- symbolic link to user's home directory 软连接到用户的home目录 
+> /share1/users_root/hpcadmin/home <- symbolic link to user's home directory 
 > 
 > /share1/users_root/hpcadmin/share2 <- symbolic link to user's sharedir
 > 
@@ -376,16 +378,28 @@ Here is a sample folder structure for use hpcadmin:
 > 
 > /share2 <- public shared folder: sharedir
 
-#8.	安装LiCO的web portal
+#8.	Install LiCO in Web Portal
 
-##1.	编辑配置文件lico_3.**/etc/conf.yaml. 修改cluster相关的内容，修改domain为集群的名字。
-##2.	安装GUI portal的依赖包
+##Step 1: Edit config file "lico_3.**/etc/conf.yaml". 
 
->[root@mgt lico_3.x]# python portal_package_install.py
+- Change the cluster related content. 
+- Change the domain name to cluster name. 
 
-> **Note：**安装完后需要关闭当前session，然后再开一个session来运行下面的命令
-##3.	配置系统初始化信息，可以不修改，使用默认配置.
-> [root@mgt lico_3.x]# vi portal_init.yaml
+##Step 2: Install Dependency Packages for GUI Portal
+
+    [root@mgt lico_3.x]# python portal_package_install.py
+
+> **Note：**
+> 
+> Close current session after installation, then open another session to execute following commands. 
+
+##Step 3: Config Portal Initialization
+
+>**NOTE:**
+>
+>You can use the default configuration without touch the Init file .
+
+    [root@mgt lico_3.x]# vi portal_init.yaml
 
     username: hpcadmin
     password: Passw0rd
@@ -398,40 +412,54 @@ Here is a sample folder structure for use hpcadmin:
     recreate_os_group: True
 
 
-##4.	初始化 GUI portal
->[root@mgt lico_3.x]# python portal_init.py
+##Step 4: Initialize GUI Portal 
 
-##5.	启动 GUI portal 的service
-启动service：在启动service的shell中会不断有屏幕输出，所以最好在一个一直存在的shell session里面启动这个service。
+Use following script to initialize GUI Portal
 
-比如可以在screen里面启动这个service，screen -help可以查看screen命令的使用。
+    [root@mgt lico_3.x]# python portal_init.py
 
-> [root@mgt lico_3.x]# screen 
-> [root@mgt lico_3.x]# ./lico start
+##Step 5: Start Service of GUI Portal
 
-这时候如果关闭这个shell（不要用命令exit退出这个shell，这样的话这个screen也不存在了），screen和shell还在，可以用screen -r重新进入这个screen，可以看到原来的shell还在。
+While starting service, there will has output information in interactive console, so we suggest you this service in a separate shell session. 
+For example, you can start the service in sreen session, use sreen -help for more details. Here is an example to use screen
 
-或者在vnc图形桌面里面开一个shell，在这个shell里面启动service。
-停止service：命令为:
->[root@mgt lico_3.x]# ./lico stop
+    [root@mgt lico_3.x]# screen 
+    [root@mgt lico_3.x]# ./lico start
 
-##6.	查看GUI portal是否安装配置成功
+If you are going to close the shell, don't use "exit", otherwise your screen session is closed. 
+Since the screen session exists even when you close the shell, you can use `screen -r` to enter screen session anytime. 
 
->URL: http://172.20.0.1:8080/login/   
->Username/Password: hpcadmin/Passw0rd
+Another way is to open a shell in vnc and start the service there. 
+
+
+To stop service, issue command below: 
+
+    [root@mgt lico_3.x]# ./lico stop
+
+##Step 6: Check if GUI Portal is Successfully Configured
+
+Open following URL and login: 
+
+    URL: http://172.20.0.1:8080/login/   
+    Username/Password: hpcadmin/Passw0rd
+
+> **Note：** 
 > 
-> **Note：** 如果GUI portal上显示的node的状态不正确，通过route命令查看ganglia是否监控在正确的网口上，ganglia应该监控在管理网的网口上。如果不在，在每台机子上通过ip route add 239.2.11.71 dev eth0（管理网口）来设置，然后在所有节点重启gmond的服务service gmond restart, 然后重启LiCO(./lico stop; ./lico start)
+> If node status in GUI Portal is incorrect, use route command to see if ganglia is working on correct port. ganglia should listening on management network port, if not, in every nodes, use `ip route add 239.2.11.71 dev eth0` (eth0 should be the management nic) to config and start gmond `service gmond restart`, then restart LiCO by using `./lico start`. 
 
-#9.	部署报警模块Nagios(可选，不建议部署)
-当前LiCO版本默认没有自动部署报警模块（Nagios），但提供了自动化部署Nagios的脚本，只需要在头结点上执行以下脚本就可以完成集群报警模块Nagios的部署。
 
-> [root@mgt lico_3.x] cd  packages/nagios/setup [root@mgt setup]
-> ./setup_nagios.sh <mgt_management_ip>  
-> 比如：./setup_nagios.sh 172.20.0.1
+#9. Deploy Alarm Module: Nagios(optional, not suggested)
 
-最后，重启Nagios服务(service nagios restart) 和httpd服务后，在LiCO管理员界面点击查看报警信息Nagios并使用nagiosadmin用户（nagiosadmin/nagiosadmin）登陆到Nagios主页面。
+Nagios module is not included in LiCO release version. If you want to deploy Nagios in cluster, we provide a script for automatic deployment. Just execute following script in Head node:
 
-![enter image description here](http://image.jpg)
+    [root@mgt lico_3.x] cd  packages/nagios/setup 
+    [root@mgt setup] ./setup_nagios.sh <mgt_management_ip>
+
+  
+> e.g. [root@mgt setup]./setup_nagios.sh 172.20.0.1
+
+Then, restart Nagios by using `service nagios restart` and httpd. 
+Under LiCO management portal, you can also find alam information of Nagios and use account "nagiosadmin/nagiosadmin" to login to Nagios home page.
 
 #Appendix 1. Modify Cluster Configuration file: nodes.csv
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
@@ -532,15 +560,24 @@ Generally, we don't specify any information here.
  - ***public _network_type***: specify when nodetype is login, it is the public network type, the value can be either Ethernet or Infiniband.
 
 
-#Appendix 2. 集群已经存在的情况下部署LiCO web portal
-以下操作在头节点进行。
-1.	确保所有节点OS（Rhel6.5/Rhel6.8/CentOS6.5/CenOS6.8）已经安装好
-2.	确保节点间root账户可以无密码访问
-3.	检查ganglia是否已经安装，如果没有的话，安装ganglia，访问ganglia的web页面，检查ganglia页面是否正确显示了集群中节点的监控信息。
-4.	确保调度器（torque 或者 lsf）已经安装好。
-5.	如果用户需要使用web vnc的功能，需要确保计算节点上安装有图形桌面（yum groupinstall "X Window System"； yum groupinstall "Desktop"），并安装vnc支持（yum install tiger*）.
-6.	将lico_3.**/cluster_monitor_project/lico_monitor_agent目录拷贝到各个计算节点的/opt目录下.
-7.	openLDAP，
+#Appendix 2. Install LiCO Web Portal in an Existed Cluster. 
+
+Apply following steps in Head node: 
+
+##Step 1: 确保所有节点OS（Rhel6.5/Rhel6.8/CentOS6.5/CenOS6.8）已经安装好
+
+##Step 2: 确保节点间root账户可以无密码访问
+
+##Step 3: 检查ganglia是否已经安装，如果没有的话，安装ganglia，访问ganglia的web页面，检查ganglia页面是否正确显示了集群中节点的监控信息。
+
+##Step 4: 确保调度器（torque 或者 lsf）已经安装好。
+
+##Step 5: 如果用户需要使用web vnc的功能，需要确保计算节点上安装有图形桌面（yum groupinstall "X Window System"； yum groupinstall "Desktop"），并安装vnc支持（yum install tiger*）.
+
+##Step 6: 将lico_3.**/cluster_monitor_project/lico_monitor_agent目录拷贝到各个计算节点的/opt目录下.
+
+##Step 7: OpenLDAP，
+
 在下面的情况下我们需要使用LiCO的脚本创建一个新的ldap环境：
 --用户没有ldap的环境
 --用户的ldap环境我们不能拿到管理员的密码，不能进行ldap用户的创建修改。
@@ -560,7 +597,9 @@ Service maui.d restart
 计算节点和login节点上torque相关的服务是：
 Service trqauthd restart
 Service pbs_mom restart
-8.	编辑lico_3.**/etc/conf.yaml ，修改LDAP相关内容
+
+##Step 8: 编辑lico_3.**/etc/conf.yaml ，修改LDAP相关内容
+
 	编辑lico_3.**/etc/conf.yaml,
 修改ldap_user_home_base为一个共享目录，如果是集群的ldap环境是原来就存在的，设置ldap_user_home_base为原来ldap用户的home目录的位置。如果集群的ldap环境是新搭建的，选取一个共享目录作为ldap_user_home_base目录，比如为/share1/users_home。
 Note：如果使用NFS作为共享文件系统，那么所有节点在mount nfs的时候必须用v3,vers=3，例如：
@@ -578,16 +617,26 @@ Note：如果使用NFS作为共享文件系统，那么所有节点在mount nfs�
 	编辑lico_3.**/etc/conf.yaml, user_management下面的ldap相关的内容。
 如ldap_server,ldap_manager,ldap_password等。 
 Note：如果ldap的环境是使用LiCO的脚本搭建的，只需要修改ldap_server, ldap_manager,ldap_password不需要修改。
-9.	编辑配置文件lico_3.**/etc/conf.yaml. 修改其中scheduler相关的内容。
+
+##Step 9: 编辑配置文件lico_3.**/etc/conf.yaml. 修改其中scheduler相关的内容。
+
 选择使用的调度器,现在支持Torque和LSF。 #Note：这里需要保证root用户可以运行Torque和LSF的命令。如果queues_auto_get设置为True，那么queues的内容将被忽略，如果queues_auto_get设置为False，queues里面的内容必须设置。
-10.	编辑配置文件lico_3.**/etc/conf.yaml. 修改cluster相关的内容。
+
+##Step 10: 编辑配置文件lico_3.**/etc/conf.yaml. 修改cluster相关的内容。
+
 修改domain为集群的domain。
-11.	修改集群节点信息lico_3.**/etc/nodes.csv。
+
+##Step 11: 修改集群节点信息lico_3.**/etc/nodes.csv。
+
 参考附录1编辑集群节点信息
-12.	安装GUI portal的依赖包
+
+##Step 12: 安装GUI portal的依赖包
+
 •	[root@mgt lico_3.x]# python portal_package_install.py
 Note：安装完后需要关闭当前session，然后再开一个session来跑下面的命令
-13.	Web系统初始化
+
+##Step 13: Web系统初始化
+
 Note：
 如果ldap环境是客户的环境，需要修改portal_init.yaml，确保portal_init.yaml中的username不能是客户的ladp中已经存在的用户，osgroup不能是客户的ldap中已经存在的组。
 如果ldap环境是使用LiCO搭建，不需要对portal_init.yaml进行修改。
@@ -604,20 +653,27 @@ o	recreate_os_group: True
 	 [root@mgt lico_3.x]# python portal_init.py
 	如果ldap环境是客户已经存在的环境，使用lico_3.**/bin/ load_users_and_groups_from_ldap.py将ldap中已经存在的用户导LiCO中，例如load_users_and_groups_from_ldap.py --adminusers admin1,admin2, 表示除了了admin1，admin2外的所有用户都被导入到lico中作为普通用户，admin1，admin2被导入到lico中作为管理员。
 如果ldap环境是使用LiCO搭建，忽略此导入过程
-14.	启动 GUI portal 的service
+
+##Step 14: 启动 GUI portal 的service
+
 启动service：在启动service的shell中会不断有屏幕输出，所以最好在一个一直存在的shell session里面启动这个service。
 	比如可以在screen里面启动这个service，screen -help可以查看screen命令的使用。[root@mgt lico_3.x]# screen
 [root@mgt lico_3.x]# ./lico start
 这时候如果关闭这个shell（不要用命令exit退出这个shell，这样的话这个screen也不存在了），screen和shell还在，可以用screen -r重新进入这个screen，可以看到原来的shell还在。
 	或者在vnc图形桌面里面开一个shell，在这个shell里面启动service。
 停止service：命令为[root@mgt lico_3.x]# ./lico stop
-15.	查看GUI portal是否安装配置成功
+
+##Step 15: 查看GUI portal是否安装配置成功
+
 http://172.20.0.1:8080/login/ 	hpcadmin/Passw0rd
 Note: 如果GUI portal上显示的node的状态不正确，通过route命令查看ganglia是否监控在正确的网口上， ganglia应该监控在管理网的网口上。如果不在，在每台机子上通过ip route add 239.2.11.71 dev eth0（管理网口）来设置，然后在所有节点重启gmond的服务service gmond restart。
 
 #附录3. ThinkServer Support（只针对ThinkServer）
+
 ThinkServer的整体流程和RackServer一样，请参考RackServer的流程从第1大步开始，在流程中下面两点是ThinkServer与RackServer不一样的地方。
-1. 获取ThinkServer的mac地址（整体流程的第4大步中的第4小步）
+
+##Step 1: 获取ThinkServer的mac地址（整体流程的第4大步中的第4小步）
+
 获取thinkserver的mac地址不能通过bin下面提供的./discover_node_macs_using_imm.py来获取mac地址。 Thinkserver获取mac地址的方式如下：
 打开两个shell，shell A， shell B。
 -- 在shell A里面
@@ -642,7 +698,8 @@ rpower c01n010 on，然后观察shellB中是否有新mac拿到，有mac拿到后
 node,interface,mac,comments,disable
 "io01",,"40:F2:E9:75:35:78",,
 
-2. ThinkServer节点的部署（整体流程的第4大步中的第5小步）
+##Step 2: ThinkServer节点的部署（整体流程的第4大步中的第5小步）
+
 启动两个shell， shell A， shell B
 -- shell A中，和RackServer一样通过调用LiCO的bin下面的deploy_nodes.py来部署节点，例如deploy_nodes.py c01n0[01-010] 。
 -- 当在shellA中看到开始deploy_nodes.py 开始monitor deploy status的时候，在shell B中运行LiCO的bin下面的thinkserver_bootmanager.py来设置这些节点从pxe启动：
@@ -656,5 +713,6 @@ rpower c01n0[01-010] on
 -- 在shell A中观察deploy的过程
 
 #附录4. 通过BMC设置bootorder (可选)
+
 ssh 登录到节点的BMC，通过asu set BootOrder.BootOrder “CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network”来设置bootorder。
 
