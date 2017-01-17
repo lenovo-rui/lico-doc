@@ -437,9 +437,7 @@ Here is a sample folder structure for use hpcadmin:
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
 Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
 
-![nodes.csv sample file](https://github.com/lenovo-rui/lico-doc/resources/nodes_csv.png)
-
-Part 1: Room Information, we support one room only for current release. 
+**Part 1**: Room Information, we support one room only for current release. 
 
 | room     | name  | location_description |
 | :------- | ----: | :------------------: |
@@ -448,17 +446,17 @@ Part 1: Room Information, we support one room only for current release.
  - ***name***: room name
  - ***location_description***: room location description
 
-Part 2: Logical Group of the Cluster (mandatory)
+**Part 2**: Logical Group of the Cluster (mandatory)
 | group    | name    | 
-| :------- | :------ | 
-|          | bigmen  |
-|          | compute |
-|          | gpu     |
-|          | login   | 
+| :------- | :------:| 
+|          | bigmen  | 
+|          | compute | 
+|          | gpu     | 
+|          | login   |  
 
  - ***name***: Logical Group name
 
-Part 3: Row Information (mandatory), the row which host the nodes of cluster.
+**Part 3**: Row Information (mandatory), the row which host the nodes of cluster.
 | row      | name  | index | belonging_room  |
 | :------- | ----: | :---: | :-------------: |
 |          | row1  |  1    | room1           |
@@ -468,7 +466,7 @@ Part 3: Row Information (mandatory), the row which host the nodes of cluster.
  - ***index***: integer, can't be same with cluster.
  - ***belonging_room***: room information which the row is hosted. The name here must be same as specified in room.
 
-Part 4: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
+**Part 4**: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
 
 | rack     | name  | column | belonging_row   |
 | :------- | ----: | :----: | :-------------: |
@@ -480,7 +478,7 @@ Part 4: Rack Information (mandatory) , the racks which hosts the nodes of cluste
  - ***belonging_row***: the row which rack is sitting, the row name must be one of row name specified in Part 3. 
  - ***column***: the column the rack is sitting, integer, can't be duplicated with the row.
 
-Part 5: Chassis Information (optional), must be specified if there is chassis in cluster
+**Part 5**: Chassis Information (optional), must be specified if there is chassis in cluster
 | chassis  | name      | belonging_rack | location   |  machine_type |
 | :------- | :-------: | :------------: | :--------: |  :----------: |
 |          | chassis1  |  rack1         | 7          | Flex_Chassis  |
@@ -492,10 +490,10 @@ Part 5: Chassis Information (optional), must be specified if there is chassis in
  - ***location***: location of chassis, it indicates which u the chassis is in，it is an integer value between 1-42. 
  - ***machine_type***: type of the chassis, either Flex_Chassis or Nextscale_Chassis. If the machine is Nextscale, use Nextscale_Chassis; if the machine is Flex, use Flex_Chassis.
 
-Part 6: Switch Information (optional) 
+**Part 6**: Switch Information (optional) 
 Generally, we don't specify any information here.
 
-Part 7: Server Information (mandatory)
+**Part 7**: Server Information (mandatory)
 | node | name      | nodetype | immip         |  hostip    | machine_type  | ipmi_user | ipmi_pwd |  belonging_rack |  belonging_chassis  |  location_u  |  width | height | groups  | application_network | application_network_nic | application_network_nic_type | public_nic | public_nic_ip | public_nic_type |     
 | :--- | :-------: | :------: | :-----------: | :--------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | 
 |      | head      |  head    | 10.240.212.97 | 172.20.1.1 |  ibm  | USERID | PASSWORD | rack1 |     |  2 |  1  |  1 |  login | 172.22.0.100 |  eth1  | Ethernet  |  eth2  | 10.240.212.22  | Ethernet |
