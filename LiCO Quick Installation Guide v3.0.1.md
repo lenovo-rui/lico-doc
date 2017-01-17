@@ -653,7 +653,7 @@ Change corresponding variables under user_management, for example: ldap_server,l
 >If the LDAP environment is built through LiCO scripts, just change the settings for ldap_server, ldap_manager,ldap_password不需要修改。
 [RUI] 什么要修改？什么不要修改，逗号标记有问题。。
 
-##Step 9: Update Scheduler information. 编辑配置文件lico_3.**/etc/conf.yaml. 修改其中scheduler相关的内容。
+##Step 9: Update Scheduler information.
 
 LiCO supports both Torque and LSF. 
 
@@ -746,50 +746,63 @@ http://172.20.0.1:8080/login/
 
 #Appendix 3. ThinkServer Support（for ThinkServer only）
 
-ThinkServer的整体流程和RackServer一样，请参考RackServer的流程从第1大步开始，在流程中下面两点是ThinkServer与RackServer不一样的地方。
+Most of steps are same between ThinkServer and RackServer, so you can follow the processes above and keep following 2 differences in mind. 
 
-##Step 1: 获取ThinkServer的mac地址（整体流程的第4大步中的第4小步）
+##1: Retrieve MAC address of a ThinkServer (Step 4 of Deploy Cluster)
 
-获取thinkserver的mac地址不能通过bin下面提供的./discover_node_macs_using_imm.py来获取mac地址。 Thinkserver获取mac地址的方式如下：
-打开两个shell，shell A， shell B。
--- 在shell A里面
-nodediscoverstart noderange=c01n[001-010]
--- 在shell B里面
-运行LiCO的bin下面的thinkserver_bootmanager.py来设置节点从pxe启动：
-如果这些节点的boot是uefi模式，使用下面的命令，正常情况下这些节点应该是uefi模式。
-./thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”
-如果这些节点的boot是legacy模式，使用下面的命令
-./thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”
+You can't use "./bin/discover_node_macs_using_imm.py" to retrieve the MAC address of ThinkServers. Follow the steps below:
 
-开始监控mac发现的结果：
-cat /dev/null > /var/log/messages
-tail -f /var/log/messages | grep DHCPDISCOVER
--- 在shell A里面
-rpower c01n001 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n001 off， 然后开始下一个节点 c01n002 
-rpower c01n002 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n002 off，然后开始下一个节点 c01n003 
-。。。。。。。
-rpower c01n010 on，然后观察shellB中是否有新mac拿到，有mac拿到后rpower c01n010 off
+Open 2 shell console, say console A and console B 
 
-最后将拿到的mac地址写入xcat的数据库中，tabedit mac，像vi一样编辑保存。
-node,interface,mac,comments,disable
-"io01",,"40:F2:E9:75:35:78",,
+In console A, use command below:
 
-##Step 2: ThinkServer节点的部署（整体流程的第4大步中的第5小步）
+    nodediscoverstart noderange=c01n[001-010] 
 
-启动两个shell， shell A， shell B
--- shell A中，和RackServer一样通过调用LiCO的bin下面的deploy_nodes.py来部署节点，例如deploy_nodes.py c01n0[01-010] 。
--- 当在shellA中看到开始deploy_nodes.py 开始monitor deploy status的时候，在shell B中运行LiCO的bin下面的thinkserver_bootmanager.py来设置这些节点从pxe启动：
-如果这些节点的boot是uefi模式，使用下面的命令，正常情况下这些节点应该是uefi模式。
-./thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”
-如果这些节点的boot是legacy模式，使用下面的命令
-./thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”
--- 在shell B中重启这些节点
-rpower c01n0[01-010] off
-rpower c01n0[01-010] on 
--- 在shell A中观察deploy的过程
+In console B, go to lico folder and try to setup nodes through pxe :
 
-#附录4. 通过BMC设置bootorder (可选)
+>**NOTE:** If node uses uefi mode to boot, issue command below:
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”`
+>**NOTE:** if node uses legacy mode to boot, issue command below:
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”`
 
-ssh 登录到节点的BMC，通过asu set BootOrder.BootOrder “CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network”来设置bootorder。
+Monitoring the MAC discovery through following commands:
+
+    cat /dev/null > /var/log/messages
+    tail -f /var/log/messages | grep DHCPDISCOVER
+
+In console A, issue command `rpower c01n001 on`, Check if there is a MAC address received in console B, if yes, issue `rpower c01n001 off`, then do it for next node c01n002, e.g. `rpower c01n002 on`, then go on and on until all MAC addresses are retrieved. 
+Then write the MAC addresses information to xcat database by using `tabedit mac`. Here is an example:
+
+    node,interface,mac,comments,disable
+    "io01",,"40:F2:E9:75:35:78",,
+
+
+##2: Deploy ThinkServer Nodes (Step 5 in Deploying Cluster)
+
+Open 2 shell console, say console A and console B 
+
+In console A, issue command below:
+
+    [root@mgt lico_3.x]# ./bin/deploy_nodes.py c01n0[01-010] 
+
+When you see "monitor deploy status", issue following command in console B:
+
+>**NOTE:** If node uses uefi mode to boot, issue command below:
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”`
+>**NOTE:** if node uses legacy mode to boot, issue command below:
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”`
+
+Then restart these node in console B:
+
+    rpower c01n0[01-010] off
+    rpower c01n0[01-010] on 
+
+Oberserve result through console A. 
+
+#Appendix 4. Config bootorder through BMC (optional)
+
+Use ssh to login to BMC of Login Node, use asu to set bootorder as below: 
+
+    asu set BootOrder.BootOrder “CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network”
 
 
