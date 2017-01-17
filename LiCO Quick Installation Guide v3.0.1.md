@@ -447,6 +447,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***location_description***: room location description
 
 **Part 2**: Logical Group of the Cluster (mandatory)
+
 | group    | name    | 
 | :------- | :------:| 
 |          | bigmen  | 
@@ -457,6 +458,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***name***: Logical Group name
 
 **Part 3**: Row Information (mandatory), the row which host the nodes of cluster.
+
 | row      | name  | index | belonging_room  |
 | :------- | ----: | :---: | :-------------: |
 |          | row1  |  1    | room1           |
@@ -479,6 +481,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***column***: the column the rack is sitting, integer, can't be duplicated with the row.
 
 **Part 5**: Chassis Information (optional), must be specified if there is chassis in cluster
+
 | chassis  | name      | belonging_rack | location   |  machine_type |
 | :------- | :-------: | :------------: | :--------: |  :----------: |
 |          | chassis1  |  rack1         | 7          | Flex_Chassis  |
@@ -494,6 +497,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
 Generally, we don't specify any information here.
 
 **Part 7**: Server Information (mandatory)
+
 | node | name      | nodetype | immip         |  hostip    | machine_type  | ipmi_user | ipmi_pwd |  belonging_rack |  belonging_chassis  |  location_u  |  width | height | groups  | application_network | application_network_nic | application_network_nic_type | public_nic | public_nic_ip | public_nic_type |     
 | :--- | :-------: | :------: | :-----------: | :--------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | 
 |      | head      |  head    | 10.240.212.97 | 172.20.1.1 |  ibm  | USERID | PASSWORD | rack1 |     |  2 |  1  |  1 |  login | 172.22.0.100 |  eth1  | Ethernet  |  eth2  | 10.240.212.22  | Ethernet |
