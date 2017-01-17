@@ -446,6 +446,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***name***: room name
  - ***location_description***: room location description
 
+
 **Part 2**: Logical Group of the Cluster (mandatory)
 
 | group    | name    | 
@@ -456,6 +457,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
 |          | login   |  
 
  - ***name***: Logical Group name
+
 
 **Part 3**: Row Information (mandatory), the row which host the nodes of cluster.
 
@@ -468,6 +470,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***index***: integer, can't be same with cluster.
  - ***belonging_room***: room information which the row is hosted. The name here must be same as specified in room.
 
+
 **Part 4**: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
 
 | rack     | name  | column | belonging_row   |
@@ -479,6 +482,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***name***: rack name
  - ***belonging_row***: the row which rack is sitting, the row name must be one of row name specified in Part 3. 
  - ***column***: the column the rack is sitting, integer, can't be duplicated with the row.
+
 
 **Part 5**: Chassis Information (optional), must be specified if there is chassis in cluster
 
@@ -493,8 +497,11 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***location***: location of chassis, it indicates which u the chassis is in，it is an integer value between 1-42. 
  - ***machine_type***: type of the chassis, either Flex_Chassis or Nextscale_Chassis. If the machine is Nextscale, use Nextscale_Chassis; if the machine is Flex, use Flex_Chassis.
 
+
 **Part 6**: Switch Information (optional) 
+
 Generally, we don't specify any information here.
+
 
 **Part 7**: Server Information (mandatory)
 
@@ -523,6 +530,7 @@ Generally, we don't specify any information here.
  - ***public_network***: specify when nodetype is login, it is the IP address exposed to public network.
  - ***public _network_nic***: specify when nodetype is login, it is the card for public network.
  - ***public _network_type***: specify when nodetype is login, it is the public network type, the value can be either Ethernet or Infiniband.
+
 
 #Appendix 2. 集群已经存在的情况下部署LiCO web portal
 以下操作在头节点进行。
