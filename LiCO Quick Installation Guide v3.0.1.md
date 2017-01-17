@@ -564,111 +564,187 @@ Generally, we don't specify any information here.
 
 Apply following steps in Head node: 
 
-##Step 1: 确保所有节点OS（Rhel6.5/Rhel6.8/CentOS6.5/CenOS6.8）已经安装好
+##Step 1: Make sure OS is correctly installed in every nodes. (Rhel6.5/Rhel6.8/CentOS6.5/CenOS6.8)
 
-##Step 2: 确保节点间root账户可以无密码访问
 
-##Step 3: 检查ganglia是否已经安装，如果没有的话，安装ganglia，访问ganglia的web页面，检查ganglia页面是否正确显示了集群中节点的监控信息。
+##Step 2: Make sure root account can access between the nodes. 
 
-##Step 4: 确保调度器（torque 或者 lsf）已经安装好。
+##Step 3: Check if ganglia is installed successfully. If not, install ganglia and then open ganglia web page to check if management information for each nodes is correct. 
 
-##Step 5: 如果用户需要使用web vnc的功能，需要确保计算节点上安装有图形桌面（yum groupinstall "X Window System"； yum groupinstall "Desktop"），并安装vnc支持（yum install tiger*）.
+##Step 4: Make sure the scheduler (either torque or lsf) correctly installed. 
 
-##Step 6: 将lico_3.**/cluster_monitor_project/lico_monitor_agent目录拷贝到各个计算节点的/opt目录下.
+##Step 5: Make sure corresponding VNC components correctly installed, if user is going to use Web VNC function.  
 
-##Step 7: OpenLDAP，
+Use following commands on each nodes to install related components: 
 
-在下面的情况下我们需要使用LiCO的脚本创建一个新的ldap环境：
---用户没有ldap的环境
---用户的ldap环境我们不能拿到管理员的密码，不能进行ldap用户的创建修改。
---用户的ladp环境使用了ssl
-使用LiCO脚本创建一个新的ldap环境的过程如下：
-[root@mgt packages/openldap]# tar -xvf openldap.tar
-[root@mgt openldap]# cd openldap
-[root@mgt openldap]# ./setup_openldap_server.sh 172.20.0.1(头节点的ip)
-除了头节点外的其他节点需要像下面一样建立ldap的环境
-[root@mgt openldap]# ./setup_openldap_client.sh compute1 172.20.0.1(头节点的ip)
-[root@mgt openldap]# ./setup_openldap_client.sh compute2 172.20.0.1(头节点的ip)
-ldap环境搭建好以后，如果集群用的调度器是torque，需要重启torque相关的服务：
-头节点上torque相关的服务是：
-Service trqauthd restart 
-Service pbs_server restart
-Service maui.d restart
-计算节点和login节点上torque相关的服务是：
-Service trqauthd restart
-Service pbs_mom restart
+    yum groupinstall "X Window System" 
+    yum groupinstall "Desktop"
+    yum install tiger*
 
-##Step 8: 编辑lico_3.**/etc/conf.yaml ，修改LDAP相关内容
+##Step 6: Setup monitor agent for each nodes.
 
-	编辑lico_3.**/etc/conf.yaml,
-修改ldap_user_home_base为一个共享目录，如果是集群的ldap环境是原来就存在的，设置ldap_user_home_base为原来ldap用户的home目录的位置。如果集群的ldap环境是新搭建的，选取一个共享目录作为ldap_user_home_base目录，比如为/share1/users_home。
-Note：如果使用NFS作为共享文件系统，那么所有节点在mount nfs的时候必须用v3,vers=3，例如：
-[root@nfsclient  /]# mount -t nfs -o vers=3 nfsserverip:/share1  /share1
-	编辑lico_3.**/etc/conf.yaml
-修改user_rootdir为一个共享目录，这个共享目录不能与ldap_user_home_base相同，比如为/share1/users_root。
-如果集群中有多个共享文件系统，修改cluster_sharedir为集群中的其它的共享目录，比如/share2。
-当使用LiCO创建或将已经有的ldap用户user1导入LiCO的时候，LiCO会在/share1/ users_root创建一个user1的目录，在/share1/users_root/user1下面会创建一个home的软连接，连接到/share1/ users_home /user1，同时/share1/users_root/user1下面会创建一个share2的软连接，连接到/share2。/share1/ users_root /user1是user1在LiCO的web页面上看到的文件系统的最顶层目录。
-最终user1的目录如下：
-/share1/users_root/user1用户的根目录，也即web上显示的最顶层目录
-/share1/users_root/hpcadmin/home 软连接到用户的home目录 
-/share1/users_root/hpcadmin/share2软连接到sharedir
-/share1/users_home/user1用户的home目录
-/share2sharedir
-	编辑lico_3.**/etc/conf.yaml, user_management下面的ldap相关的内容。
-如ldap_server,ldap_manager,ldap_password等。 
-Note：如果ldap的环境是使用LiCO的脚本搭建的，只需要修改ldap_server, ldap_manager,ldap_password不需要修改。
+Copy folder "lico_3.**/cluster_monitor_project/lico_monitor_agent" to each compute nodes' /opt folder. 
 
-##Step 9: 编辑配置文件lico_3.**/etc/conf.yaml. 修改其中scheduler相关的内容。
+##Step 7: Install LDAP for cluster. 
 
-选择使用的调度器,现在支持Torque和LSF。 #Note：这里需要保证root用户可以运行Torque和LSF的命令。如果queues_auto_get设置为True，那么queues的内容将被忽略，如果queues_auto_get设置为False，queues里面的内容必须设置。
+In following scenarios, we need to create a new LDAP environment:
 
-##Step 10: 编辑配置文件lico_3.**/etc/conf.yaml. 修改cluster相关的内容。
+ - user does not have LDAP environment 
+ - user can't get LDAP admin right: can't create or modify LDAP 
+ - user existed LDAP environment used ssl
 
+Here are commands to use LiCO script to create a new LDAP environment: 
+
+    [root@mgt packages/openldap]# tar -xvf openldap.tar
+    [root@mgt openldap]# cd openldap
+    [root@mgt openldap]# ./setup_openldap_server.sh 172.20.0.1(ip of Head node)
+    
+Except Head node, other nodes should build LDAP environment with following scripts:
+
+    [root@mgt openldap]# ./setup_openldap_client.sh compute1 172.20.0.1(ip of Head node)
+    [root@mgt openldap]# ./setup_openldap_client.sh compute2 172.20.0.1(ip of Head node)
+
+After building LDAP environment, if torque is used as scheduler of cluster, we need to restart corresponding services. 
+
+In Head node: 
+
+    Service trqauthd restart 
+    Service pbs_server restart
+    Service maui.d restart
+
+In Compute and Login node: 
+
+    Service trqauthd restart
+    Service pbs_mom restart
+
+##Step 8: Update LDAP information.
+
+Edit "lico_3.**/etc/conf.yaml" :
+ 
+Change ldap_user_home_base to a shared folder. 
+If working in an existing LDAP, set ldap_user_home_base to the existing LDAP user's home directory. 
+If LDAP environment is newly created, select a shared folder as ldap_user_home_base, e.g.
+
+    ldap_user_home_base='/share1/users_home'
+
+>**Note:**
+>
+>if NFS is used, mount nfs with version 3, e.g.
+>`[root@nfsclient  /]# mount -t nfs -o vers=3 nfsserverip:/share1  /share1`
+
+Change user_rootdir to a shared folder (e.g. /share1/users_root), the folder used can't be same as specified for ldap_user_home_base.  
+If there are different type of shared file system, change cluster_sharedir to other shared folder in cluster, e.g. /share2
+
+When importing user1 to LiCO, LiCO will create a directory under /share1/users_root/, like /share1/users_root/user1. And create a symbolic link of home directory to /share1/users_home/user1. Meanwhile LiCO will create a symbolic link share2 under /share1/users_root/user1/ to link to /share2. 
+'/share1/users_root/user1 is the top root folder for user to use in LiCO web page. 
+
+So user1's LDAP directory structure is as following: 
+
+    /share1/users_root/user1  <-  user's root directory, also the root directory in web.
+    /share1/users_root/hpcadmin/home  <-  symbolic link to user's home directory 
+    /share1/users_root/hpcadmin/share2  <-  symbolic link to user's sharedir 
+    /share1/users_home/user1  <-  user's home directory
+    /share2  <-  sharedir
+
+Change corresponding variables under user_management, for example: ldap_server,ldap_manager,ldap_password, etc. 
+ 
+>**Note:**
+>
+>If the LDAP environment is built through LiCO scripts, just change the settings for ldap_server, ldap_manager,ldap_password不需要修改。
+[RUI] 什么要修改？什么不要修改，逗号标记有问题。。
+
+##Step 9: Update Scheduler information. 编辑配置文件lico_3.**/etc/conf.yaml. 修改其中scheduler相关的内容。
+
+LiCO supports both Torque and LSF. 
+
+>**NOTE:**
+>
+>- Make sure that root user can execute commands of Torque and LSF.
+>- If set queues_auto_get to True, queues' content will be ignored. 
+>- If set queues_auto_get to False, queues' content must be set. 
+
+##Step 10: Update Cluster Information 
+
+Change domain to cluster's domain. 
 修改domain为集群的domain。
 
-##Step 11: 修改集群节点信息lico_3.**/etc/nodes.csv。
+##Step 11:  Update Nodes Information 
 
-参考附录1编辑集群节点信息
+Reference Appendix 1 to update nodes' information in lico_3.**/etc/nodes.csv。
 
-##Step 12: 安装GUI portal的依赖包
+##Step 12: Install Dependencies of GUI Portal 
 
-•	[root@mgt lico_3.x]# python portal_package_install.py
-Note：安装完后需要关闭当前session，然后再开一个session来跑下面的命令
+    [root@mgt lico_3.x]# python portal_package_install.py
 
-##Step 13: Web系统初始化
+>**Note:**
+>Current session must be closed after installation. Please open a new session for successive commands. 
 
-Note：
-如果ldap环境是客户的环境，需要修改portal_init.yaml，确保portal_init.yaml中的username不能是客户的ladp中已经存在的用户，osgroup不能是客户的ldap中已经存在的组。
-如果ldap环境是使用LiCO搭建，不需要对portal_init.yaml进行修改。
-	[root@mgt lico_3.x]# vi portal_init.yaml
-o	username: hpcadmin
-o	password: Passw0rd
-o	email: admin@admin.com
-o	billgroup: default_bill_group
-o	credits: 1000
-o	osgroup: default_os_group
-o	recreate_os_user: True
-o	recreate_bill_group: True
-o	recreate_os_group: True
-	 [root@mgt lico_3.x]# python portal_init.py
-	如果ldap环境是客户已经存在的环境，使用lico_3.**/bin/ load_users_and_groups_from_ldap.py将ldap中已经存在的用户导LiCO中，例如load_users_and_groups_from_ldap.py --adminusers admin1,admin2, 表示除了了admin1，admin2外的所有用户都被导入到lico中作为普通用户，admin1，admin2被导入到lico中作为管理员。
-如果ldap环境是使用LiCO搭建，忽略此导入过程
+##Step 13: Initialize Web System
 
-##Step 14: 启动 GUI portal 的service
+>**Note:**
+>If working in existing LDAP, user needs to modify "portal_init.yaml" and make sure the username specified is an existed user.
+>osgroup can't be the group existed before in LDAP. 
+>If used LiCO to build LDAP environment, there is no need to change "portal_init.yaml"
 
-启动service：在启动service的shell中会不断有屏幕输出，所以最好在一个一直存在的shell session里面启动这个service。
-	比如可以在screen里面启动这个service，screen -help可以查看screen命令的使用。[root@mgt lico_3.x]# screen
-[root@mgt lico_3.x]# ./lico start
-这时候如果关闭这个shell（不要用命令exit退出这个shell，这样的话这个screen也不存在了），screen和shell还在，可以用screen -r重新进入这个screen，可以看到原来的shell还在。
-	或者在vnc图形桌面里面开一个shell，在这个shell里面启动service。
-停止service：命令为[root@mgt lico_3.x]# ./lico stop
+Here is a sample config file: 
 
-##Step 15: 查看GUI portal是否安装配置成功
+    [root@mgt lico_3.x]# vi portal_init.yaml
+    
+    username: hpcadmin
+    password: Passw0rd
+    email: admin@admin.com
+    billgroup: default_bill_group
+    credits: 1000
+    osgroup: default_os_group
+    recreate_os_user: True
+    recreate_bill_group: True
+    recreate_os_group: True
 
-http://172.20.0.1:8080/login/ 	hpcadmin/Passw0rd
-Note: 如果GUI portal上显示的node的状态不正确，通过route命令查看ganglia是否监控在正确的网口上， ganglia应该监控在管理网的网口上。如果不在，在每台机子上通过ip route add 239.2.11.71 dev eth0（管理网口）来设置，然后在所有节点重启gmond的服务service gmond restart。
+After finish, issue following commands to apply changes:
 
-#附录3. ThinkServer Support（只针对ThinkServer）
+    [root@mgt lico_3.x]# python portal_init.py
+
+If working in existing LDAP environment, use " load_users_and_groups_from_ldap.py" to import existed user to LiCO. 
+
+Here is am example to import all users to LiCO, please note that admin1 and admin2 are imported as admin user:
+
+    [root@mgt lico_3.x]# ./bin/load_users_and_groups_from_ldap.py --adminusers admin1,admin2
+
+>**NOTE:**
+>Skip this step is LDAP environment is built from LiCO scripts. 
+
+##Step 14: Start Service of GUI Portal
+
+Since LiCO keeps outputing information to console, we suggest that user starts service of GUI Portal in a non-stopped shell session.
+
+e.g. start LiCO in screen, here are the commands:
+
+    [root@mgt lico_3.x]# screen
+    [root@mgt lico_3.x]# ./lico start
+
+>**NOTE:** user "screen -h" for more information about screen. 
+
+If you are going to close the shell, don't use "exit", otherwise your screen session is closed. 
+Since the screen session exists even when you close the shell, you can use `screen -r` to enter screen session anytime. 
+
+Another way is to open a shell in vnc and start the service there. 
+
+To stop service, issue command below: 
+
+    [root@mgt lico_3.x]# ./lico stop
+
+
+##Step 15: Verify Installation of GUI Portal
+
+Open following URL and use hpcadmin/Passw0rd to login to LiCO web:
+http://172.20.0.1:8080/login/ 	
+
+> **Note：** 
+> 
+> If node status in GUI Portal is incorrect, use route command to see if ganglia is working on correct port. ganglia should listening on management network port, if not, in every nodes, use `ip route add 239.2.11.71 dev eth0` (eth0 should be the management nic) to config and start gmond `service gmond restart`, then restart LiCO by using `./lico start`. 
+
+
+#Appendix 3. ThinkServer Support（for ThinkServer only）
 
 ThinkServer的整体流程和RackServer一样，请参考RackServer的流程从第1大步开始，在流程中下面两点是ThinkServer与RackServer不一样的地方。
 
@@ -715,4 +791,5 @@ rpower c01n0[01-010] on
 #附录4. 通过BMC设置bootorder (可选)
 
 ssh 登录到节点的BMC，通过asu set BootOrder.BootOrder “CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network”来设置bootorder。
+
 
