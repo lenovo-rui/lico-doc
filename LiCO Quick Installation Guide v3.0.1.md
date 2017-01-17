@@ -1,7 +1,7 @@
 LiCO Quick Installation Guide v3.0.1
 ===============================
 
-### Table of contents
+## Table of contents
 
 [TOC]
 
@@ -43,9 +43,9 @@ Manually config IMM IP and Create IPMI account.
 >2. If Flex Server is setup up with IMM IP and IPMI account, we will treat Flex Server as Rack Server.
 
 #4. Install Head Node
-###Step 0: Config raid of Head node, Raid1 is suggested. Skip if the raid is already reconfigured.
+##Step 0: Config raid of Head node, Raid1 is suggested. Skip if the raid is already reconfigured.
 
-###Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for Head node.
+##Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for Head node.
 
 >**NOTES:** 
 
@@ -53,12 +53,12 @@ Manually config IMM IP and Create IPMI account.
 
 >2. Please select English as the System language.
 
-###Step 2: Config hostname of Head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
+##Step 2: Config hostname of Head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
 
     NETWORKING=yes
     HOSTNAME=mgt
 
-###Step 3: Setup IP of Head node's network card. There will be 3 IP addresses for a Head node.
+##Step 3: Setup IP of Head node's network card. There will be 3 IP addresses for a Head node.
 
 > Management Network (OS) IP, e.g. 172.20.0.1 
 
@@ -83,15 +83,15 @@ please use command below to restart network service.
 >
 >If using IB for Application network configuration, config will show ***fail*** when restart network service. You see this error because IB driver and service is not well installed, LiCO will take care of them later, So don't worry about it.   
 
-###Step 4: Copy LiCO package and extract it to a directory. 
+##Step 4: Copy LiCO package and extract it to a directory. 
 
-###Step 5: Copy OS ISO image to LiCO folder, e.g. "/lico_3.x/packages/os"
+##Step 5: Copy OS ISO image to LiCO folder, e.g. "/lico_3.x/packages/os"
 
 >**NOTE:**
 >
 >If installing CentOS, please download CentOS-*-DVD.iso to LiCO folder, e.g. "/lico_3.x/packages/os".
 
-###Step 6: Modify the configuration file
+##Step 6: Modify the configuration file
     
     [root@mgt ~]# cd /lico_3.x/etc/
     [root@mgt etc]# vi cluster.conf 
@@ -106,13 +106,13 @@ please use command below to restart network service.
 >
 >`OSISO="RHEL6.5-20131111.0-Server-x86_64-DVD1.iso"  #ISO Image filename`
 
-###Step 7: Update Kernel of Head Node
+##Step 7: Update Kernel of Head Node
 
     [root@mgt ~]# cd /lico_3.x/setup/
     [root@mgt ~]#./0_upgrade_head_node_kernel.sh（don't execute thie command through ssh, execute it locally. ）
     Reboot
 
-###Step 8: Config Network
+##Step 8: Config Network
 
 >**NOTE:**
 >
@@ -151,7 +151,7 @@ please use command below to restart network service.
         staticrange     10.240.212.29-10.240.212.40		# Note: It must match the customer network environment
     }
     
-###Step 9: Setup Head Node
+##Step 9: Setup Head Node
 
     [root@mgt ~]# cd /lico_3.x/setup/
     [root@mgt setup]# ./1_head_node_setup.sh （don't execute thie command through ssh, execute it locally.）
@@ -166,15 +166,15 @@ Check configuration of Head node:
 
 #5.	Deploy Cluster
 
-###Step 1: Modify Cluster configuration file
+##Step 1: Modify Cluster configuration file
 Please reference Appendix 1
 
-###Step 2: Add node to xcat 
+##Step 2: Add node to xcat 
 
     [root@mgt bin]# ./add_nodes.py
 
  
-###Step 3: Config Raid of Node
+##Step 3: Config Raid of Node
 Remotely connect to IMM of the node through ssh channel, and use following command to configure the Raid. Skip if Raid was already configured. 
 
     system> storage -config vol -add -R 1 -D disk[9-0]:disk[9-1] -target ctrl[9]
@@ -185,7 +185,7 @@ Remotely connect to IMM of the node through ssh channel, and use following comma
 >
 >This command of Raid configuration is only supported by m5 machine, please use UEFI for other type of machines.
 
-###Step 4: Retrieve MAC Addresses of Nodes (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment)
+##Step 4: Retrieve MAC Addresses of Nodes (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment)
 
 Use following command to get mac addresses of all nodes. The results of mac addresses returned are stored in macs.txt (folder path is: "/lico_3.x/bin/"). 
 The first NIC is  marked as "selectednic" by default. You can change it to the NIC which you used to install OS, the NIC you used should be connected to Management Network.
@@ -212,7 +212,7 @@ Use following command to add selected NIC to database of xcat, after finished ed
 
     [root@mgt bin]# ./set_node_mac_in_xcat.py -c "macs.txt"
 
-###Step 5: Deploy Node (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment) 
+##Step 5: Deploy Node (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment) 
 
 User following scripts to deploy nodes:
 
@@ -242,7 +242,7 @@ Please login to ganglia and check if ganglia is correctly deployed.
 
     http://172.20.0.1/ganglia
 
-###Step 6: Rename Application NIC of a Node (optional)
+##Step 6: Rename Application NIC of a Node (optional)
 
 > **NOTE:**
 > 
@@ -274,7 +274,7 @@ Use "Reboot" to reboot Head node.
 >Skip this part if your cluster will not use lustre.
 
 Apply following steps to install lustre for your cluster: 
-### Step 1: Modify Lustre Configuration File
+## Step 1: Modify Lustre Configuration File
 
     [root@mgt setup]# vi ../etc/lustre.conf
 
@@ -303,7 +303,7 @@ Apply following steps to install lustre for your cluster:
     	 };
     }
 
-###Step 2: Install Lustre
+##Step 2: Install Lustre
 
 Use following script to install lustre.
 
@@ -322,7 +322,7 @@ There are 2 scenarios :
 
 We strongly suggest using LiCO script to build a new ldap environment for HPC cluster and here are steps:
 
-###Step 1: Use script to create LDAP service
+##Step 1: Use script to create LDAP service
 
     [root@mgt packages/openldap]# tar -xvf openldap.tar 
     [root@mgt openldap]# cd openldap 
@@ -338,7 +338,7 @@ User following script to restart torque:
 
     [root@mgt  bin]#./service_manager.py --restart torque
 
-###Step 2: Modify Configuration File 
+##Step 2: Modify Configuration File 
 
 Change "/lico_3.x/etc/conf.yaml" as following:
 
@@ -378,13 +378,13 @@ Here is a sample folder structure for use hpcadmin:
 
 #8.	安装LiCO的web portal
 
-###1.	编辑配置文件lico_3.**/etc/conf.yaml. 修改cluster相关的内容，修改domain为集群的名字。
-###2.	安装GUI portal的依赖包
+##1.	编辑配置文件lico_3.**/etc/conf.yaml. 修改cluster相关的内容，修改domain为集群的名字。
+##2.	安装GUI portal的依赖包
 
 >[root@mgt lico_3.x]# python portal_package_install.py
 
 > **Note：**安装完后需要关闭当前session，然后再开一个session来运行下面的命令
-###3.	配置系统初始化信息，可以不修改，使用默认配置.
+##3.	配置系统初始化信息，可以不修改，使用默认配置.
 > [root@mgt lico_3.x]# vi portal_init.yaml
 
     username: hpcadmin
@@ -398,10 +398,10 @@ Here is a sample folder structure for use hpcadmin:
     recreate_os_group: True
 
 
-###4.	初始化 GUI portal
+##4.	初始化 GUI portal
 >[root@mgt lico_3.x]# python portal_init.py
 
-###5.	启动 GUI portal 的service
+##5.	启动 GUI portal 的service
 启动service：在启动service的shell中会不断有屏幕输出，所以最好在一个一直存在的shell session里面启动这个service。
 
 比如可以在screen里面启动这个service，screen -help可以查看screen命令的使用。
@@ -415,7 +415,7 @@ Here is a sample folder structure for use hpcadmin:
 停止service：命令为:
 >[root@mgt lico_3.x]# ./lico stop
 
-###6.	查看GUI portal是否安装配置成功
+##6.	查看GUI portal是否安装配置成功
 
 >URL: http://172.20.0.1:8080/login/   
 >Username/Password: hpcadmin/Passw0rd
@@ -437,7 +437,7 @@ Here is a sample folder structure for use hpcadmin:
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
 Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
 
-**Part 1**: Room Information, we support one room only for current release. 
+##**Part 1**: Room Information, we support one room only for current release. 
 
 | room     | name  | location_description |
 | :------- | ----: | :------------------: |
@@ -447,7 +447,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***location_description***: room location description
 
 
-**Part 2**: Logical Group of the Cluster (mandatory)
+##**Part 2**: Logical Group of the Cluster (mandatory)
 
 | group    | name    | 
 | :------- | :------:| 
@@ -459,7 +459,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***name***: Logical Group name
 
 
-**Part 3**: Row Information (mandatory), the row which host the nodes of cluster.
+##**Part 3**: Row Information (mandatory), the row which host the nodes of cluster.
 
 | row      | name  | index | belonging_room  |
 | :------- | ----: | :---: | :-------------: |
@@ -471,7 +471,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***belonging_room***: room information which the row is hosted. The name here must be same as specified in room.
 
 
-**Part 4**: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
+##**Part 4**: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
 
 | rack     | name  | column | belonging_row   |
 | :------- | ----: | :----: | :-------------: |
@@ -484,7 +484,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***column***: the column the rack is sitting, integer, can't be duplicated with the row.
 
 
-**Part 5**: Chassis Information (optional), must be specified if there is chassis in cluster
+##**Part 5**: Chassis Information (optional), must be specified if there is chassis in cluster
 
 | chassis  | name      | belonging_rack | location   |  machine_type |
 | :------- | :-------: | :------------: | :--------: |  :----------: |
@@ -498,12 +498,12 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***machine_type***: type of the chassis, either Flex_Chassis or Nextscale_Chassis. If the machine is Nextscale, use Nextscale_Chassis; if the machine is Flex, use Flex_Chassis.
 
 
-**Part 6**: Switch Information (optional) 
+##**Part 6**: Switch Information (optional) 
 
 Generally, we don't specify any information here.
 
 
-**Part 7**: Server Information (mandatory)
+##**Part 7**: Server Information (mandatory)
 
 | node | name      | nodetype | immip         |  hostip    | machine_type  | ipmi_user | ipmi_pwd |  belonging_rack |  belonging_chassis  |  location_u  |  width | height | groups  | application_network | application_network_nic | application_network_nic_type | public_nic | public_nic_ip | public_nic_type |     
 | :--- | :-------: | :------: | :-----------: | :--------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | 
