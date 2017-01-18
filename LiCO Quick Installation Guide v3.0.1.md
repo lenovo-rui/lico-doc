@@ -5,7 +5,7 @@ LiCO Quick Installation Guide v3.0.1
 
 [TOC]
 
-#1. Download the Package
+#1. Download packages
 
 ##Download OS and Installation files
 LiCO supports CentOS 6.5/6.8 and RedHat 6.5/6.8. If required system is CentOS, please download both CentOS-*-DVD1.iso ( for head node installation) and CentOS-*-DVD.iso ( for LiCO yum source)  from team's FTP.  
@@ -28,7 +28,7 @@ To install RedHat, just download one ISO file, since both head node and yum sour
 >
 >ftp://10.240.208.41/Releases/ 
 
-#2. For installation on an existed Cluster, please reference Appendix 2
+#2. For installation on an existed cluster, please reference appendix 2
 
 LiCO supports installing Web server on an existed cluster, but it still needs to meet some minimum requirements, please reference Appendix 2 for more information.  
 
@@ -42,29 +42,29 @@ Manually config IMM IP and Create IPMI account.
 >
 >2. If Flex Server is setup up with IMM IP and IPMI account, we will treat Flex Server as Rack Server.
 
-#4. Install Head Node
-##Step 0: Config raid of Head node, Raid1 is suggested. Skip if the raid is already reconfigured.
+#4. Install head node
+##Step 0: Config raid of head node, Raid1 is suggested. Skip if the raid is already reconfigured.
 
-##Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for Head node.
+##Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for head node.
 
 >**NOTES:** 
 
->1. If you are using CentOS, please download image CentOS-*-DVD1.iso to install Head node.
+>1. If you are using CentOS, please download image CentOS-*-DVD1.iso to install head node.
 
->2. Please select English as the System language.
+>2. Please select English as the system language.
 
-##Step 2: Config hostname of Head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
+##Step 2: Config hostname of head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
 
     NETWORKING=yes
     HOSTNAME=mgt
 
-##Step 3: Setup IP of Head node's network card. There will be 3 IP addresses for a Head node.
+##Step 3: Setup IP of head node's network card. There will be 3 IP addresses for a head node.
 
-> Management Network (OS) IP, e.g. 172.20.0.1 
+> Management network (OS) IP, e.g. 172.20.0.1 
 
-> Application Network IP, e.g. 172.22.0.1 
+> Application network IP, e.g. 172.22.0.1 
 
-> Public Network IP (optional, for remote access to Head node).
+> Public network IP (optional, for remote access to Head node).
 
 Edit "/etc/sysconfig/network-scripts/ifcfg-ethX" 
 or "/etc/sysconfig/network-scripts/ifcfg-ibX" to setup network card. (replace X with the number of the network card, e.g. ifcfg-eth1)
@@ -81,17 +81,17 @@ please use command below to restart network service.
 
 >**NOTE:**
 >
->If using IB for Application network configuration, config will show ***fail*** when restart network service. You see this error because IB driver and service is not well installed, LiCO will take care of them later, So don't worry about it.   
+>If using IB for application network configuration, config will show ***fail*** when restart network service. You see this error because IB driver and service is not well installed. LiCO will take care of them later, don't worry about it.   
 
 ##Step 4: Copy LiCO package and extract it to a directory. 
 
-##Step 5: Copy OS ISO image to LiCO folder, e.g. "/lico_3.x/packages/os"
+##Step 5: Copy OS iso image to LiCO folder, e.g. "/lico_3.x/packages/os"
 
 >**NOTE:**
 >
 >If installing CentOS, please download CentOS-*-DVD.iso to LiCO folder, e.g. "/lico_3.x/packages/os".
 
-##Step 6: Modify the configuration file
+##Step 6: Modify cluster configuration file
     
     [root@mgt ~]# cd /lico_3.x/etc/
     [root@mgt etc]# vi cluster.conf 
@@ -106,13 +106,13 @@ please use command below to restart network service.
 >
 >`OSISO="RHEL6.5-20131111.0-Server-x86_64-DVD1.iso"  #ISO Image filename`
 
-##Step 7: Update Kernel of Head Node
+##Step 7: Update kernel of head node
 
     [root@mgt ~]# cd /lico_3.x/setup/
     [root@mgt ~]#./0_upgrade_head_node_kernel.sh（don't execute thie command through ssh, execute it locally. ）
     Reboot
 
-##Step 8: Config Network
+##Step 8: Config network
 
 >**NOTE:**
 >
@@ -151,22 +151,22 @@ please use command below to restart network service.
         staticrange     10.240.212.29-10.240.212.40		# Note: It must match the customer network environment
     }
     
-##Step 9: Setup Head Node
+##Step 9: Setup head node
 
     [root@mgt ~]# cd /lico_3.x/setup/
     [root@mgt setup]# ./1_head_node_setup.sh （don't execute thie command through ssh, execute it locally.）
     [root@mgt setup]# ssh mgt（ssh Head node itself）
 
-Check configuration of Head node: 
+Check configuration of head node: 
 
     [root@mgt setup]# source /etc/profile.d/xcat.sh
     [root@mgt setup]# cd ~/lico_3.x/bin/
     [root@mgt bin]# ./service_manager.py --check head
 
 
-#5.	Deploy Cluster
+#5.	Deploy cluster
 
-##Step 1: Modify Cluster configuration file
+##Step 1: Modify cluster configuration file
 Please reference Appendix 1
 
 ##Step 2: Add node to xcat 
@@ -174,8 +174,8 @@ Please reference Appendix 1
     [root@mgt bin]# ./add_nodes.py
 
  
-##Step 3: Config Raid of Node
-Remotely connect to IMM of the node through ssh channel, and use following command to configure the Raid. Skip if Raid was already configured. 
+##Step 3: Config raid of node
+Remotely connect to IMM of the node through ssh channel, and use following command to configure the Raid. Skip if raid was already configured. 
 
     system> storage -config vol -add -R 1 -D disk[9-0]:disk[9-1] -target ctrl[9]
     
@@ -183,9 +183,9 @@ Remotely connect to IMM of the node through ssh channel, and use following comma
 
 >**NOTE:**
 >
->This command of Raid configuration is only supported by m5 machine, please use UEFI for other type of machines.
+>This command of raid configuration is only supported by M5 machine, please use UEFI for other type of machines.
 
-##Step 4: Retrieve MAC Addresses of Nodes (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment)
+##Step 4: Retrieve MAC addresses of nodes (reference ThinkServer support of appendix 3 for ThinkServer deployment)
 
 Use following command to get mac addresses of all nodes. The results of mac addresses returned are stored in macs.txt (folder path is: "/lico_3.x/bin/"). 
 The first NIC is  marked as "selectednic" by default. You can change it to the NIC which you used to install OS, the NIC you used should be connected to Management Network.
@@ -212,7 +212,7 @@ Use following command to add selected NIC to database of xcat, after finished ed
 
     [root@mgt bin]# ./set_node_mac_in_xcat.py -c "macs.txt"
 
-##Step 5: Deploy Node (Reference ThinkServer Support of Appendix 3 for ThinkServer deployment) 
+##Step 5: Deploy node (reference ThinkServer support of appendix 3 for ThinkServer deployment) 
 
 User following scripts to deploy nodes:
 
@@ -242,7 +242,7 @@ Please login to ganglia and check if ganglia is correctly deployed.
 
     http://172.20.0.1/ganglia
 
-##Step 6: Rename Application NIC of a Node (optional)
+##Step 6: Rename application NIC of a node (optional)
 
 > **NOTE:**
 > 
@@ -267,14 +267,15 @@ Use "Reboot" to reboot Head node.
 >
 >- Please check whether config is applied successfully after reboot.
 
-#6. Install Lustre, a parallel file system
+#6. Install Lustre
 
 >**NOTE:**
 >
 >Skip this part if your cluster will not use lustre.
 
-Apply following steps to install lustre for your cluster: 
-## Step 1: Modify Lustre Configuration File
+Apply following steps to install lustre for your cluster.
+ 
+## Step 1: Modify Lustre configuration file
 
     [root@mgt setup]# vi ../etc/lustre.conf
 
@@ -313,16 +314,17 @@ After installation, issue following command to check if share folder is correctl
 
     [root@mgt bin]# df –h
 
-# 7.	Install LDAP to Manage Users of a Cluster
+# 7.	Install LDAP to manage users of a cluster
+
 LiCO utilize LDAP to manage users of a cluster
 There are 2 scenarios :
 
  1. use the script to build a new ldap environment 
  2. use LiCO in an existed ldap environment
 
-We strongly suggest using LiCO script to build a new ldap environment for HPC cluster and here are steps:
+We strongly suggest using LiCO script to build a new LDAP environment for HPC cluster and here are steps:
 
-##Step 1: Use script to create LDAP service
+##Step 1: Use script to create LDAP environment
 
     [root@mgt packages/openldap]# tar -xvf openldap.tar 
     [root@mgt openldap]# cd openldap 
@@ -338,7 +340,7 @@ User following script to restart torque:
 
     [root@mgt  bin]#./service_manager.py --restart torque
 
-##Step 2: Modify Configuration File 
+##Step 2: Modify configuration file 
 
 Change "/lico_3.x/etc/conf.yaml" as following:
 
@@ -378,14 +380,14 @@ Here is a sample folder structure for user hpcadmin:
 > 
 > /share2 <- public shared folder: sharedir
 
-#8.	Install LiCO in Web Portal
+#8.	Install LiCO in web portal
 
 ##Step 1: Edit config file "lico_3.**/etc/conf.yaml". 
 
 - Change the cluster related content. 
 - Change the domain name to cluster name. 
 
-##Step 2: Install Dependency Packages for GUI Portal
+##Step 2: Install dependent packages for GUI Portal
 
     [root@mgt lico_3.x]# python portal_package_install.py
 
@@ -393,7 +395,7 @@ Here is a sample folder structure for user hpcadmin:
 > 
 > Close current session after installation, then open another session to execute following commands. 
 
-##Step 3: Config Portal Initialization
+##Step 3: Config portal initialization
 
 >**NOTE:**
 >
@@ -412,13 +414,13 @@ Here is a sample folder structure for user hpcadmin:
     recreate_os_group: True
 
 
-##Step 4: Initialize GUI Portal 
+##Step 4: Initialize GUI portal 
 
 Use following script to initialize GUI Portal
 
     [root@mgt lico_3.x]# python portal_init.py
 
-##Step 5: Start Service of GUI Portal
+##Step 5: Start service of GUI portal
 
 While starting service, there will has output information in interactive console, so we suggest you this service in a separate shell session. 
 For example, you can start the service in sreen session, use sreen -help for more details. Here is an example to use screen
@@ -436,7 +438,7 @@ To stop service, issue command below:
 
     [root@mgt lico_3.x]# ./lico stop
 
-##Step 6: Check if GUI Portal is Successfully Configured
+##Step 6: Check if GUI portal is successfully configured
 
 Open following URL and login: 
 
@@ -445,10 +447,10 @@ Open following URL and login:
 
 > **Note：** 
 > 
-> If node status in GUI Portal is incorrect, use route command to see if ganglia is working on correct port. ganglia should listening on management network port, if not, in every nodes, use `ip route add 239.2.11.71 dev eth0` (eth0 should be the management nic) to config and start gmond `service gmond restart`, then restart LiCO by using `./lico start`. 
+> If node status in GUI portal is incorrect, use route command to see if ganglia is working on correct port. ganglia should listening on management network port, if not, in every nodes, use `ip route add 239.2.11.71 dev eth0` (eth0 should be the management nic) to config and start gmond `service gmond restart`, then restart LiCO by using `./lico start`. 
 
 
-#9. Deploy Alarm Module: Nagios(optional, not suggested)
+#9. Deploy alarm module:  Nagios (optional, not suggested)
 
 Nagios module is not included in LiCO release version. If you want to deploy Nagios in cluster, we provide a script for automatic deployment. Just execute following script in Head node:
 
@@ -461,11 +463,13 @@ Nagios module is not included in LiCO release version. If you want to deploy Nag
 Then, restart Nagios by using `service nagios restart` and httpd. 
 Under LiCO management portal, you can also find alam information of Nagios and use account "nagiosadmin/nagiosadmin" to login to Nagios home page.
 
-#Appendix 1. Modify Cluster Configuration file: nodes.csv
+#Appendix 1. Modify cluster configuration file: nodes.csv
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
 Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
 
-##**Part 1**: Room Information, we support one room only for current release. 
+##**Part 1**: Room Information
+
+Only **one** room is supported in current releases. 
 
 | room     | name  | location_description |
 | :------- | ----: | :------------------: |
@@ -475,7 +479,7 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***location_description***: room location description
 
 
-##**Part 2**: Logical Group of the Cluster (mandatory)
+##**Part 2**: Logical group of cluster (mandatory)
 
 | group    | name    | 
 | :------- | :------:| 
@@ -487,7 +491,9 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***name***: Logical Group name
 
 
-##**Part 3**: Row Information (mandatory), the row which host the nodes of cluster.
+##**Part 3**: Row Information (mandatory)
+
+Rows which host the nodes of cluster.
 
 | row      | name  | index | belonging_room  |
 | :------- | ----: | :---: | :-------------: |
@@ -499,7 +505,9 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***belonging_room***: room information which the row is hosted. The name here must be same as specified in room.
 
 
-##**Part 4**: Rack Information (mandatory) , the racks which hosts the nodes of cluster.
+##**Part 4**: Rack information (mandatory) 
+
+Racks which host the nodes of cluster.
 
 | rack     | name  | column | belonging_row   |
 | :------- | ----: | :----: | :-------------: |
@@ -512,7 +520,9 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
  - ***column***: the column the rack is sitting, integer, can't be duplicated with the row.
 
 
-##**Part 5**: Chassis Information (optional), must be specified if there is chassis in cluster
+##**Part 5**: Chassis Information (optional)
+
+If there is any chassis in cluster, this information must be specified.
 
 | chassis  | name      | belonging_rack | location   |  machine_type |
 | :------- | :-------: | :------------: | :--------: |  :----------: |
@@ -528,10 +538,10 @@ Here are some guidelines for modifying the csv file. After finish, replace the c
 
 ##**Part 6**: Switch Information (optional) 
 
-Generally, we don't specify any information here.
+Generally, we don't specify any information here. 
 
 
-##**Part 7**: Server Information (mandatory)
+##**Part 7**: Server/Node Information (mandatory)
 
 | node | name      | nodetype | immip         |  hostip    | machine_type  | ipmi_user | ipmi_pwd |  belonging_rack |  belonging_chassis  |  location_u  |  width | height | groups  | application_network | application_network_nic | application_network_nic_type | public_nic | public_nic_ip | public_nic_type |     
 | :--- | :-------: | :------: | :-----------: | :--------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | 
@@ -560,18 +570,21 @@ Generally, we don't specify any information here.
  - ***public _network_type***: specify when nodetype is login, it is the public network type, the value can be either Ethernet or Infiniband.
 
 
-#Appendix 2. Install LiCO Web Portal in an Existed Cluster. 
+#Appendix 2. Install LiCO web portal in an existed cluster. 
 
-Apply following steps in Head node: 
+Follow steps below to install LiCO in Head node.
 
 ##Step 1: Make sure OS is correctly installed in every nodes. (Rhel6.5/Rhel6.8/CentOS6.5/CenOS6.8)
 
 
 ##Step 2: Make sure root account can access between the nodes. 
 
+
 ##Step 3: Check if ganglia is installed successfully. If not, install ganglia and then open ganglia web page to check if management information for each nodes is correct. 
 
+
 ##Step 4: Make sure the scheduler (either torque or lsf) correctly installed. 
+
 
 ##Step 5: Make sure corresponding VNC components correctly installed, if user is going to use Web VNC function.  
 
@@ -581,9 +594,11 @@ Use following commands on each nodes to install related components:
     yum groupinstall "Desktop"
     yum install tiger*
 
+
 ##Step 6: Setup monitor agent for each nodes.
 
 Copy folder "lico_3.**/cluster_monitor_project/lico_monitor_agent" to each compute nodes' /opt folder. 
+
 
 ##Step 7: Install LDAP for cluster. 
 
@@ -616,6 +631,7 @@ In Compute and Login node:
 
     Service trqauthd restart
     Service pbs_mom restart
+
 
 ##Step 8: Update LDAP information.
 
@@ -653,6 +669,7 @@ Change corresponding variables under user_management, for example: ldap_server,l
 >If the LDAP environment is built through LiCO scripts, just change the settings for ldap_server, ldap_manager,ldap_password不需要修改。
 [RUI] 什么要修改？什么不要修改，逗号标记有问题。。
 
+
 ##Step 9: Update Scheduler information.
 
 LiCO supports both Torque and LSF. 
@@ -663,14 +680,16 @@ LiCO supports both Torque and LSF.
 >- If set queues_auto_get to True, queues' content will be ignored. 
 >- If set queues_auto_get to False, queues' content must be set. 
 
+
 ##Step 10: Update Cluster Information 
 
 Change domain to cluster's domain. 
-修改domain为集群的domain。
+
 
 ##Step 11:  Update Nodes Information 
 
 Reference Appendix 1 to update nodes' information in lico_3.**/etc/nodes.csv。
+
 
 ##Step 12: Install Dependencies of GUI Portal 
 
@@ -678,6 +697,7 @@ Reference Appendix 1 to update nodes' information in lico_3.**/etc/nodes.csv。
 
 >**Note:**
 >Current session must be closed after installation. Please open a new session for successive commands. 
+
 
 ##Step 13: Initialize Web System
 
@@ -688,8 +708,7 @@ Reference Appendix 1 to update nodes' information in lico_3.**/etc/nodes.csv。
 
 Here is a sample config file: 
 
-    [root@mgt lico_3.x]# vi portal_init.yaml
-    
+    [root@mgt lico_3.x]# vi portal_init.yaml    
     username: hpcadmin
     password: Passw0rd
     email: admin@admin.com
@@ -712,6 +731,7 @@ Here is am example to import all users to LiCO, please note that admin1 and admi
 
 >**NOTE:**
 >Skip this step is LDAP environment is built from LiCO scripts. 
+
 
 ##Step 14: Start Service of GUI Portal
 
@@ -744,7 +764,7 @@ http://172.20.0.1:8080/login/
 > If node status in GUI Portal is incorrect, use route command to see if ganglia is working on correct port. ganglia should listening on management network port, if not, in every nodes, use `ip route add 239.2.11.71 dev eth0` (eth0 should be the management nic) to config and start gmond `service gmond restart`, then restart LiCO by using `./lico start`. 
 
 
-#Appendix 3. ThinkServer Support（for ThinkServer only）
+#Appendix 3. ThinkServer support（for ThinkServer only）
 
 Most of steps are same between ThinkServer and RackServer, so you can follow the processes above and keep following 2 differences in mind. 
 
@@ -780,7 +800,7 @@ Then write the MAC addresses information to xcat database by using `tabedit mac`
     "io01",,"40:F2:E9:75:35:78",,
 
 
-##2: Deploy ThinkServer Nodes (Step 5 in Deploying Cluster)
+##2: Deploy ThinkServer nodes (step 5 in deploying cluster)
 
 Open 2 shell console, say console A and console B 
 
