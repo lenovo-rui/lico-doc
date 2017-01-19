@@ -116,7 +116,7 @@ please use command below to restart network service.
 ##Step 7: Update kernel of head node
 
     [root@mgt ~]# cd /lico_3.x/setup/
-    [root@mgt ~]#./0_upgrade_head_node_kernel.sh（don't execute thie command through ssh, execute it locally. ）
+    [root@mgt ~]#./0_upgrade_head_node_kernel.sh（don't execute this command through ssh, execute it locally. ）
     Reboot
 
 ##Step 8: Config network
@@ -164,7 +164,7 @@ please use command below to restart network service.
 ##Step 9: Setup head node
 
     [root@mgt ~]# cd /lico_3.x/setup/
-    [root@mgt setup]# ./1_head_node_setup.sh （don't execute thie command through ssh, execute it locally.）
+    [root@mgt setup]# ./1_head_node_setup.sh （don't execute this command through ssh, execute it locally.）
     [root@mgt setup]# ssh mgt（ssh Head node itself）
 
 Check configuration of head node: 
@@ -474,6 +474,8 @@ Under LiCO management portal, you can also find alam information of Nagios and u
 #Appendix 1. Modify cluster configuration file: nodes.csv
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
 Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
+
+![sample nodes.csv](http://pic.027cgb.cn/20170119/f227b9f1-2728-466f-81d5-261d3b86cd05nodes_csv.png)
 
 ##**Part 1**: Room Information
 
