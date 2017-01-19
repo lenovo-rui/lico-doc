@@ -120,9 +120,6 @@ please use command below to restart network service.
 
 >If there isn't "Login" node in cluster,  you don't need to config "public network".
 
-[RUI] What's the different between dynamic range and static range in config?
-[RUI] Why application network does not require dynamic range
-
     [root@mgt ~]# cd /lico_3.x/etc/
     [root@mgt etc]# vi networks.conf   
 
@@ -151,6 +148,12 @@ please use command below to restart network service.
         staticrange     10.240.212.29-10.240.212.40		# Note: It must match the customer network environment
     }
     
+>**NOTE:**
+>
+>***staticrange:*** IP range which is used to verify the IP of the nodes after installation. This range should cover all IPs specified in nodes.csv.  
+>***dynamicrange:*** IP range which will be dynamically allocated during OS installation. The range specified must not be lesser than the number of nodes to be installed. 
+
+
 ##Step 9: Setup head node
 
     [root@mgt ~]# cd /lico_3.x/setup/
@@ -426,8 +429,6 @@ For example, you can start the service in sreen session, use sreen -help for mor
     [root@mgt lico_3.x]# screen 
     [root@mgt lico_3.x]# ./lico start
 
-[RUI] An error is reported that: mongod is not installed. 
-
 If you are going to close the shell, don't use "exit", otherwise your screen session is closed. 
 Since the screen session exists even when you close the shell, you can use `screen -r` to enter screen session anytime. 
 
@@ -666,8 +667,7 @@ Change corresponding variables under user_management, for example: ldap_server,l
  
 >**Note:**
 >
->If the LDAP environment is built through LiCO scripts, just change the settings for ldap_server, ldap_manager,ldap_password不需要修改。
-[RUI] 什么要修改？什么不要修改，逗号标记有问题。。
+>If the LDAP environment is built through LiCO scripts, just change the settings for ldap_server. (don't change ldap_manager and ldap_password.)
 
 
 ##Step 9: Update Scheduler information.
