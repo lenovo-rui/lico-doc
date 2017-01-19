@@ -43,7 +43,7 @@ Manually config IMM IP and Create IPMI account.
 >2. If Flex Server is setup up with IMM IP and IPMI account, we will treat Flex Server as Rack Server.
 
 #4. Install head node
-##Step 0: Config raid of head node, Raid1 is suggested. Skip if the raid is already reconfigured.
+##Step 0: Config raid of head node, Raid1 is suggested. Skip if the raid is already configured.
 
 ##Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for head node.
 
@@ -218,6 +218,8 @@ User following scripts to deploy nodes:
 
     [root@mgt bin]# ./deploy_nodes.py "node1,node2,node[3-5]"
 
+node1, node2 ... must be set to the node names you specified in nodes.csv
+
 >**NOTE:**
 >
 >When meeting problems below, press 'ctrl+c' to termindate, then re-run the scripts. 
@@ -356,10 +358,6 @@ user_home_base：user_home_base is the home directory of a LDAP user, and it mus
 
 user_rootdir：user_rootdir is the root folder of a LDAP user, as known as the root foder for web page. user_rootdir must be shared across the cluster.
 
-是ldap用户的根目录，也即用户在web页面上看到的顶级目录。user_rootdir也必须是一个能共享访问的目录。
-
-[RUI] 什么人可以共享访问，需要设定什么样的权限？
-
 cluster_sharedir：cluster_sharedir is the shared folder of a cluster besides user_home_base and user_rootdir.
 
 > **Note：**
@@ -427,6 +425,8 @@ For example, you can start the service in sreen session, use sreen -help for mor
 
     [root@mgt lico_3.x]# screen 
     [root@mgt lico_3.x]# ./lico start
+
+[RUI] An error is reported that: mongod is not installed. 
 
 If you are going to close the shell, don't use "exit", otherwise your screen session is closed. 
 Since the screen session exists even when you close the shell, you can use `screen -r` to enter screen session anytime. 
