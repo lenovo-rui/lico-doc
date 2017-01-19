@@ -30,11 +30,11 @@ To install RedHat, just download one ISO file, since both head node and yum sour
 
 #2. For installation on an existed cluster, please reference appendix 2
 
-LiCO supports installing Web server on an existed cluster, but it still needs to meet some minimum requirements, please reference Appendix 2 for more information.  
+LiCO supports installing web server on an existed cluster, but it still needs to meet some minimum requirements, please reference appendix 2 for more information.  
 
 #3. Config IMM IP and create IPMI account for nodes in cluster
 
-Manually config IMM IP and Create IPMI account.
+Manually config IMM IP and create IPMI account.
 
 >**NOTES:**
 >
@@ -43,7 +43,10 @@ Manually config IMM IP and Create IPMI account.
 >2. If Flex Server is setup up with IMM IP and IPMI account, we will treat Flex Server as Rack Server.
 
 #4. Install head node
-##Step 0: Config raid of head node, Raid1 is suggested. Skip if the raid is already configured.
+##Step 0: Config raid of head node
+
+Raid1 is suggested. 
+Skip if the raid is already configured.
 
 ##Step 1: Install OS (CentOS 6.5/6.8 or RedHat 6.5/6.8) for head node.
 
@@ -53,12 +56,16 @@ Manually config IMM IP and Create IPMI account.
 
 >2. Please select English as the system language.
 
-##Step 2: Config hostname of head node. Open "/etc/sysconfig/network" and change hostname to "mgt".
+##Step 2: Config hostname of head node. 
+
+Open "/etc/sysconfig/network" and change hostname to "mgt".
 
     NETWORKING=yes
     HOSTNAME=mgt
 
-##Step 3: Setup IP of head node's network card. There will be 3 IP addresses for a head node.
+##Step 3: Setup IP of head node's network card. 
+
+There will be 3 IP addresses for a head node as below:
 
 > Management network (OS) IP, e.g. 172.20.0.1 
 
@@ -85,7 +92,7 @@ please use command below to restart network service.
 
 ##Step 4: Copy LiCO package and extract it to a directory. 
 
-##Step 5: Copy OS iso image to LiCO folder, e.g. "/lico_3.x/packages/os"
+##Step 5: Copy OS iso image to LiCO folder, "/lico_3.x/packages/os"
 
 >**NOTE:**
 >
@@ -188,7 +195,7 @@ Remotely connect to IMM of the node through ssh channel, and use following comma
 >
 >This command of raid configuration is only supported by M5 machine, please use UEFI for other type of machines.
 
-##Step 4: Retrieve MAC addresses of nodes (reference ThinkServer support of appendix 3 for ThinkServer deployment)
+##Step 4: Retrieve MAC addresses of nodes (reference ThinkServer support in appendix 3 for ThinkServer deployment)
 
 Use following command to get mac addresses of all nodes. The results of mac addresses returned are stored in macs.txt (folder path is: "/lico_3.x/bin/"). 
 The first NIC is  marked as "selectednic" by default. You can change it to the NIC which you used to install OS, the NIC you used should be connected to Management Network.
@@ -215,13 +222,13 @@ Use following command to add selected NIC to database of xcat, after finished ed
 
     [root@mgt bin]# ./set_node_mac_in_xcat.py -c "macs.txt"
 
-##Step 5: Deploy node (reference ThinkServer support of appendix 3 for ThinkServer deployment) 
+##Step 5: Deploy node (reference ThinkServer support in appendix 3 for ThinkServer deployment) 
 
 User following scripts to deploy nodes:
 
     [root@mgt bin]# ./deploy_nodes.py "node1,node2,node[3-5]"
 
-node1, node2 ... must be set to the node names you specified in nodes.csv
+***node1, node2 ...*** must be set to the node names you specified in nodes.csv
 
 >**NOTE:**
 >
@@ -357,11 +364,11 @@ Change "/lico_3.x/etc/conf.yaml" as following:
     user_rootdir: /share1/users_root
     cluster_sharedir: [“/share2”]
 
-user_home_base：user_home_base is the home directory of a LDAP user, and it must be shared across the cluster.
+***user_home_base:*** user_home_base is the home directory of a LDAP user, and it must be shared across the cluster.
 
-user_rootdir：user_rootdir is the root folder of a LDAP user, as known as the root foder for web page. user_rootdir must be shared across the cluster.
+***user_rootdir:*** user_rootdir is the root folder of a LDAP user, as known as the root foder for web page. user_rootdir must be shared across the cluster.
 
-cluster_sharedir：cluster_sharedir is the shared folder of a cluster besides user_home_base and user_rootdir.
+***cluster_sharedir:*** cluster_sharedir is the shared folder of a cluster besides user_home_base and user_rootdir.
 
 > **Note：**
 > 
