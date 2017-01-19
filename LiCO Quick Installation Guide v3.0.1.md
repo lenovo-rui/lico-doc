@@ -475,7 +475,7 @@ Under LiCO management portal, you can also find alam information of Nagios and u
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
 Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
 
-![sample nodes.csv](https://raw.githubusercontent.com/lenovo-rui/lico-doc/blob/master/resources/nodes_csv.png)
+![sample nodes.csv](https://github.com/lenovo-rui/lico-doc/raw/master/resources/nodes_csv.png)
 
 ##**Part 1**: Room Information
 
