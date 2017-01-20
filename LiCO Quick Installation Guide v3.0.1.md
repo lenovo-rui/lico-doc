@@ -157,8 +157,8 @@ please use command below to restart network service.
     
 >**NOTE:**
 >
->***staticrange:*** IP range which is used to verify the IP of the nodes after installation. This range should cover all IPs specified in nodes.csv.  
->***dynamicrange:*** IP range which will be dynamically allocated during OS installation. The range specified must not be lesser than the number of nodes to be installed. 
+>***staticrange:*** defines the IP range for host IP of nodes. All IP specified for nodes must be in this range.  
+>***dynamicrange:*** IP range which will be dynamically allocated for OS installation. 
 
 
 ##Step 9: Setup head node
@@ -176,10 +176,10 @@ Check configuration of head node:
 
 #5.	Deploy cluster
 
-##Step 1: Modify cluster configuration file
+##Step 1: Modify configuration file of nodes
 Please reference Appendix 1
 
-##Step 2: Add node to xcat 
+##Step 2: Add nodes to xcat 
 
     [root@mgt bin]# ./add_nodes.py
 
@@ -279,7 +279,7 @@ Use "Reboot" to reboot Head node.
 >
 >- Please check whether config is applied successfully after reboot.
 
-#6. Install Lustre
+#6. Install Lustre (optional)
 
 >**NOTE:**
 >
@@ -471,7 +471,7 @@ Nagios module is not included in LiCO release version. If you want to deploy Nag
 Then, restart Nagios by using `service nagios restart` and httpd. 
 Under LiCO management portal, you can also find alam information of Nagios and use account "nagiosadmin/nagiosadmin" to login to Nagios home page.
 
-#Appendix 1. Modify cluster configuration file: nodes.csv
+#Appendix 1. Modify configuration file of nodes: nodes.csv
 Copy file in "/lico_3.*/etc/nodes.csv" to your local hard disk and open it with a corresponding editor, e.g. Microsoft Excel. 
 Here are some guidelines for modifying the csv file. After finish, replace the csv file in Head node with the new one.
 
@@ -587,10 +587,10 @@ Follow steps below to install LiCO in Head node.
 ##Step 1: Make sure OS is correctly installed in every nodes. (Rhel6.5/Rhel6.8/CentOS6.5/CenOS6.8)
 
 
-##Step 2: Make sure root account can access between the nodes. 
+##Step 2: Make sure root account can access between the nodes without specifying password. 
 
 
-##Step 3: Check if ganglia is installed successfully. If not, install ganglia and then open ganglia web page to check if management information for each nodes is correct. 
+##Step 3: Check if ganglia is installed successfully. If not, install ganglia and then open ganglia web page to check if monitoring information for each nodes is correct. 
 
 
 ##Step 4: Make sure the scheduler (either torque or lsf) correctly installed. 
