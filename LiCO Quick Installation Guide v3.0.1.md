@@ -5,28 +5,62 @@ LiCO Quick Installation Guide v3.0.1
 
 [TOC]
 
-#1. Download packages
+#1. Prerequisites
 
-##Download OS and Installation files
-LiCO supports CentOS 6.5/6.8 and RedHat 6.5/6.8. If required system is CentOS, please download both CentOS-*-DVD1.iso ( for head node installation) and CentOS-*-DVD.iso ( for LiCO yum source)  from team's FTP.  
+##OS
 
->**System Package URL**
->
->ftp://10.240.208.41/packages/CentOS-6.5-x86_64-bin-DVD1.iso
->
->ftp://10.240.208.41/packages/CentOS-6.5-x86_64-DVD.iso
->
->ftp://10.240.208.41/packages/CentOS-6.8-x86_64-bin-DVD1.iso
->
->ftp://10.240.208.41/packages/CentOS-6.8-x86_64-DVD.iso
+LiCO supports CentOS 6.5/6.8 and RedHat 6.5/6.8.  You can find the packages through their website. 
 
-To install RedHat, just download one ISO file, since both head node and yum source are packaged in a single ISO file.  
+>**RedHat:**
+>https://www.redhat.com/en
 
-##Download LiCO package
+>**CentOS:**
+>https://www.centos.org/download/ 
 
->**LiCO  Package URL**
->
+
+##LiCO package
+
+>**LiCO  Package**
 >ftp://10.240.208.41/Releases/ 
+
+When finished downloading, please extract LiCO to a local folder e.g. your home folder. (we will use the home folder as the default folder for later examples. Please note that you can put LiCO package in anywhere you want.)
+
+##3rd party packages
+
+LiCO utilized many 3rd party softwares, please download them and put them into LiCO's "packages" folder (e.g. “~/lico_3.x/packages”). 
+
+>**NOTE:**
+>Some of the softwares requires local compilation, you need to compile them and put the final package into "packages" folder. 
+
+### conflunt
+
+
+###ganglia
+
+
+###cuda
+
+
+###torque
+
+
+###maui
+
+
+###mpich
+
+
+###mvapich
+
+
+###openmpi
+
+
+###OS for other Nodes
+
+
+###xcat
+
 
 #2. For installation on an existed cluster, please reference appendix 2
 
