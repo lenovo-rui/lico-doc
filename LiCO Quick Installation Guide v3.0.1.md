@@ -9,7 +9,7 @@ LiCO Quick Installation Guide v3.0.1
 
 ##OS
 
-LiCO supports both CentOS 6.5/6.8 and RedHat 6.5/6.8, find the download through website. 
+LiCO supports both CentOS 6.5/6.8 and RedHat 6.5/6.8, download the OS you prefer. 
 
 **RedHat:**
 https://www.redhat.com/en
@@ -27,7 +27,7 @@ When finished downloading, please extract LiCO to a local folder e.g. your home 
 
 ##3rd party packages
 
-LiCO utilized many 3rd party softwares, please download and put them into corresponding "packages" folder in LiCO (e.g. “~/lico_3.x/packages/confluent/” for confluent package) before installing LiCO. 
+LiCO utilizes many 3rd party software, please download and put them into corresponding "packages" folder (e.g. “~/lico_3.x/packages/confluent/” for confluent package) before installing LiCO. 
 
 >**NOTE:**
 >Some of the softwares requires local compilation, you need to compile them and put the compiled package into "packages" folder. 
