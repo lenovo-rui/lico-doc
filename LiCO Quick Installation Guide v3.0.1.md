@@ -9,7 +9,7 @@ LiCO Quick Installation Guide v3.0.1
 
 ##OS
 
-LiCO supports CentOS 6.5/6.8 and RedHat 6.5/6.8.  You can find the packages through their website. 
+LiCO supports both CentOS 6.5/6.8 and RedHat 6.5/6.8, find the download through website. 
 
 **RedHat:**
 https://www.redhat.com/en
@@ -23,16 +23,16 @@ https://www.centos.org/download/
 **LiCO  Package**
 ftp://10.240.208.41/Releases/ 
 
-When finished downloading, please extract LiCO to a local folder e.g. your home folder. (we will use the home folder as the default folder for later examples. Please note that you can put LiCO package in anywhere you want.)
+When finished downloading, please extract LiCO to a local folder e.g. your home folder. (we will use the home folder as the default folder for example. Please note that you can put LiCO package anywhere you want.)
 
 ##3rd party packages
 
-LiCO utilized many 3rd party softwares, please download them and put them into LiCO's "packages" folder (e.g. “~/lico_3.x/packages”). 
+LiCO utilized many 3rd party softwares, please download and put them into corresponding "packages" folder in LiCO (e.g. “~/lico_3.x/packages/confluent/” for confluent package) before installing LiCO. 
 
 >**NOTE:**
 >Some of the softwares requires local compilation, you need to compile them and put the compiled package into "packages" folder. 
 
-### conflunt
+### confluent
 Download packages through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/confluent/”. 
 
@@ -130,7 +130,7 @@ Follow command below to compile Ganglia-web：
     [root@mgt noarch]# cp ganglia-web-3.6.2-1.noarch.rpm ~/lico_3.0.1/packages/ganglia
 
 >**Note: **
->All the rpm package will be available in /root/rpmbuild/RPMS/noarch/
+>All the rpm packages are available in /root/rpmbuild/RPMS/noarch/
 
 
 ###cuda
