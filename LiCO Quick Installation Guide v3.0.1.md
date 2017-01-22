@@ -59,7 +59,7 @@ http://xcat.org/lenovo/16a/downloads/el6/x86_64/
 
 
 ###ganglia
-Download packages through the URLs below and put them into **target folder:**
+Download ganglia packages through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/ganglia/”. 
 
 ***ganglia-3.6.1.tar.gz***
@@ -134,7 +134,7 @@ Follow command below to compile Ganglia-web：
 
 
 ###cuda
-Download packages through the URLs below and put them into **target folder:**
+Download cuda package through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/gpu/”.
  
 ***cuda_6.5.14_linux_64.run***
@@ -143,7 +143,7 @@ https://developer.nvidia.com/cuda-toolkit-65
 
 ###torque
 
-Download packages through the URLs below and put them into **target folder:**
+Download torque package through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/torque/”. 
 
 ***torque-5.0.1.tar.gz***
@@ -169,15 +169,14 @@ Follow commands below to compile torque:
 
 
 ###maui
-Download packages through the URLs below and put them into **target folder:**
+Download maui package through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/maui/”. 
-
-
->**NOTE:**
->to compile maui, please compile torque first. 
 
 ***maui-3.3.1.tar.gz***
 http://www.adaptivecomputing.com/products/open-source/maui/
+
+>**NOTE:**
+>to compile maui, please compile torque first. 
 
 Follow commands below to compile maui:
 
@@ -243,7 +242,7 @@ Follow commands below to compile maui:
 
 
 ###mpich
-Download packages through the URLs below and put them into **target folder:**
+Download mpich package through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/mpich/”. 
 
 ***mpich-3.1.3.tar.gz***
@@ -251,7 +250,7 @@ http://www.mpich.org/static/downloads/3.1.3/
 
 
 ###mvapich
-Download packages through the URLs below and put them into **target folder:**
+Download mvapich package through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/mvapich/”. 
 
 ***mvapich2-2.0.1.tar.gz***
@@ -259,7 +258,7 @@ http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/mvapich2-2.0.1.tar.gz
 
 
 ###openmpi
-Download packages through the URLs below and put them into **target folder:**
+Download openmpi package through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/openmpi/”. 
 
 ***openmpi-1.8.4.tar.gz***
@@ -267,17 +266,17 @@ https://www.open-mpi.org/software/ompi/v1.8/
 
 
 ###OS for other Nodes
-Download packages through the URLs below and put them into **target folder:**
+Download the OS you need through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/os/”. 
 
-If you are going to use ***Redhat Enterprise Linux***
+***Redhat Enterprise Linux***
 https://www.redhat.com/en
 
-For ***CentOS***
+***CentOS***
 https://www.centos.org/download/ 
 
 ###xcat
-Download packages through the URLs below and put them into **target folder:**
+Download xcat packages through the URLs below and put them into **target folder:**
 > “~/lico_3.x/packages/xcat/”. 
 
 ***xcat-core-2.8.5.tar.bz2***
@@ -289,7 +288,7 @@ https://xcat.org/files/xcat/xcat-dep/2.x_Linux/?C=M;O=D
 open constants config file, find `XCATDEP`, change it to `xcat-dep-201612051642.tar.bz2`
 
 
-#2. For installation on an existed cluster, please reference appendix 2
+#2. To install LiCO for an existed cluster, please reference appendix 2
 
 LiCO supports installing web server on an existed cluster, but it still needs to meet some minimum requirements, please reference appendix 2 for more information.  
 
