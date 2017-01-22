@@ -11,17 +11,17 @@ LiCO Quick Installation Guide v3.0.1
 
 LiCO supports CentOS 6.5/6.8 and RedHat 6.5/6.8.  You can find the packages through their website. 
 
->**RedHat:**
->https://www.redhat.com/en
+**RedHat:**
+https://www.redhat.com/en
 
->**CentOS:**
->https://www.centos.org/download/ 
+**CentOS:**
+https://www.centos.org/download/ 
 
 
 ##LiCO package
 
->**LiCO  Package**
->ftp://10.240.208.41/Releases/ 
+**LiCO  Package**
+ftp://10.240.208.41/Releases/ 
 
 When finished downloading, please extract LiCO to a local folder e.g. your home folder. (we will use the home folder as the default folder for later examples. Please note that you can put LiCO package in anywhere you want.)
 
@@ -30,36 +30,263 @@ When finished downloading, please extract LiCO to a local folder e.g. your home 
 LiCO utilized many 3rd party softwares, please download them and put them into LiCO's "packages" folder (e.g. “~/lico_3.x/packages”). 
 
 >**NOTE:**
->Some of the softwares requires local compilation, you need to compile them and put the final package into "packages" folder. 
+>Some of the softwares requires local compilation, you need to compile them and put the compiled package into "packages" folder. 
 
 ### conflunt
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/confluent/”. 
+
+***pyparsing-2.1.0-1.noarch.rpm***
+http://xcat.org/lenovo/16a/downloads/el6/x86_64/
+
+***python-crypto-2.6.1-3.x86_64.rpm***
+http://xcat.org/lenovo/16a/downloads/el6/x86_64/
+
+***python-dnspython-1.14.0-1.noarch.rpm***
+http://xcat.org/lenovo/16a/downloads/el6/x86_64/
+
+***python-ecdsa-0.13-1.noarch.rpm***
+http://xcat.org/lenovo/16a/downloads/el6/x86_64/
+
+***python-eventlet-0.18.4-2.noarch.rpm***
+http://xcat.org/lenovo/16a/downloads/el6/x86_64/
+
+***python-greenlet-0.4.9-1.x86_64.rpm***
+http://xcat.org/lenovo/16a/downloads/el6/x86_64/
+
+***python-paramiko-1.16.0-1.noarch.rpm***
+http://xcat.org/lenovo/16a/downloads/el6/x86_64/
 
 
 ###ganglia
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/ganglia/”. 
+
+***ganglia-3.6.1.tar.gz***
+https://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/3.6.1
+
+***ganglia-web-3.6.2.tar.gz***
+https://sourceforge.net/projects/ganglia/files/ganglia-web/3.6.2/
+
+***rrdtool-devel-1.3.8-6.el6.x86_64.rpm***
+http://rpm.pbone.net/index.php3?stat=26&dist=74&size=27912&name=rrdtool-devel-1.3.8-6.el6.x86_64.rpm
+
+***rrdtool-devel-1.3.8-7.el6.x86_64.rpm***
+http://mirror.centos.org/centos/6/os/x86_64/Packages/
+
+***libconfuse-2.7-4.el6.x86_64.rpm***
+https://dl.fedoraproject.org/pub/epel/6/x86_64/
+
+***libconfuse-devel-2.7-4.el6.x86_64.rpm***
+https://dl.fedoraproject.org/pub/epel/6/x86_64/
+
+ganglia requires rpm-build to do local compilation and packaging, if you have not install rpm-build, follow commands below:
+
+    [root@mgt ~]# yum install rpm-build
+
+After installation of rpm-build, you can find folder rpmbuild under root folder, enter into rpmbuild folder and you will see folders named SPECS、SOURCES、RPMS、SRPMS、BUILD、BUILDROOT, if not, create these folder by using mkdir.
+
+Follow command below to compile ganglia:
+
+    [root@mgt ~]# yum install rrdtool 
+    [root@mgt ~]# cd ..
+    [root@mgt /]# cd ~/lico_3.0.1/packages/ganglia
+    [root@mgt ganglia]# rpm -ivh rrdtool-devel-1.3.8-7.el6.x86_64.rpm
+    [root@mgt ganglia]# yum install apr-devel 
+    [root@mgt ganglia]# yum install apr-util-devel
+    [root@mgt ganglia]# rpm -ivh libconfuse-2.7-4.el6.x86_64.rpm
+    [root@mgt ganglia]# rpm -ivh libconfuse-devel-2.7-4.el6.x86_64.rpm
+    [root@mgt ganglia]# yum install pcre*
+    [root@mgt ganglia]# yum install zlib*
+    [root@mgt ganglia]# yum install gcc-c++
+    [root@mgt ganglia]# yum install libpng-devel.x86_64
+    [root@mgt ganglia]# yum install libart_lgpl-devel.x86_64
+    [root@mgt ganglia]# yum install python-devel.x86_64
+    [root@mgt ganglia]# yum install autoconf.noarch
+    [root@mgt ganglia]# yum install automake.noarch
+    [root@mgt ganglia]# yum install libtool.x86_64
+    [root@mgt ganglia]# yum install freetype-devel.x86_64
+    [root@mgt ganglia]# tar -xvf ganglia-3.6.1.tar.gz
+    [root@mgt ganglia]# cd ganglia-3.6.1
+    [root@mgt ganglia-3.6.1]# cp ../ganglia-3.6.1.tar.gz  /root/rpmbuild/SOURCES
+    [root@mgt ganglia-3.6.1]# rpmbuild -ba ganglia.spec
+    [root@mgt ganglia-3.6.1]# cd ../../
+    [root@mgt ~]# cd rpmbuild/RPMS/x86_64
+    [root@mgt x86_64]# cp ganglia-devel-3.6.1-1.x86_64.rpm ganglia-gmetad-3.6.1-1.x86_64.rpm  ganglia-gmond-3.6.1-1.x86_64.rpm ganglia-gmond-modules-python-3.6.1-1.x86_64.rpm ~/lico_3.0.1/packages/ganglia
+
+
+Follow command below to compile Ganglia-web：
+
+    [root@mgt ~]# cd ..
+    [root@mgt /]# cd opt/lico_3.0.1/packages/ganglia
+    [root@mgt ganglia]# yum install httpd
+    [root@mgt ganglia]# yum install php*
+    [root@mgt ganglia]# tar -xvf ganglia-web-3.6.2.tar.gz
+    [root@mgt ganglia]# cd ganglia-web-3.6.2
+    [root@mgt ganglia-web-3.6.2]# cp ../ganglia-web-3.6.2.tar.gz /root/rpmbuild/SOURCES/
+    [root@mgt ganglia-web-3.6.2]# cp apache.conf /root/rpmbuild/SOURCES/
+    [root@mgt ganglia-web-3.6.2]# rpmbuild -ba ganglia-web.spec
+    [root@mgt /]# cd /root/rpmbuild/RPMS/noarch
+    [root@mgt noarch]# cp ganglia-web-3.6.2-1.noarch.rpm ~/lico_3.0.1/packages/ganglia
+
+>**Note: **
+>All the rpm package will be available in /root/rpmbuild/RPMS/noarch/
 
 
 ###cuda
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/gpu/”.
+ 
+***cuda_6.5.14_linux_64.run***
+https://developer.nvidia.com/cuda-toolkit-65
 
 
 ###torque
 
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/torque/”. 
+
+***torque-5.0.1.tar.gz***
+https://github.com/adaptivecomputing/torque/tree/5.0.1
+
+Follow commands below to compile torque:
+
+    [root@mgt ~]# yum install openssl*
+    [root@mgt ~]# yum install libxml*
+    [root@ mgt ~]# yum install boost-devel
+    [root@ mgt ~]# yum install gcc*
+    [root@ mgt ~]# cd ~/lico_3.0.1/packages/torque/
+    [root@mgt torque]# cp torque-5.0.1.tar.gz /root/rpmbuild/SOURCES/
+    [root@mgt torque]# tar -xvf torque-5.0.1.tar.gz
+    [root@mgt torque]# cd torque-5.0.1
+    [root@mgt torque-5.0.1]# chown root:root torque.spec 
+    [root@mgt torque-5.0.1]# rpmbuild -ba torque.spec
+    [root@mgt torque-5.0.1]# cd /root/rpmbuild/RPMS/x86_64/
+    [root@mgt x86_64/]# rpm -ivh torque-5.0.1-1.adaptive.el6.x86_64.rpm
+    [root@mgt x86_64/]# rpm -ivh torque-server-5.0.1-1.adaptive.el6.x86_64.rpm
+    [root@mgt x86_64/]# rpm -ivh torque-devel-5.0.1-1.adaptive.el6.x86_64.rpm
+    [root@mgt x86_64/]# cp torque-5.0.1-1.adaptive.el6.x86_64.rpm torque-client-5.0.1-1.adaptive.el6.x86_64.rpm torque-devel-5.0.1-1.adaptive.el6.x86_64.rpm torque-scheduler-5.0.1-1.adaptive.el6.x86_64.rpm torque-server-5.0.1-1.adaptive.el6.x86_64.rpm  ~/lico_3.0.1/packages/ganglia
+
 
 ###maui
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/maui/”. 
+
+
+>**NOTE:**
+>to compile maui, please compile torque first. 
+
+***maui-3.3.1.tar.gz***
+http://www.adaptivecomputing.com/products/open-source/maui/
+
+Follow commands below to compile maui:
+
+    [root@mgt /]# cd ~/lico_3.0.1/packages/maui
+    [root@mgt maui]# cp maui-3.3.1.tar.gz /root/rpmbuild/SOURCES/
+    [root@mgt maui]# tar -xvf maui-3.3.1.tar.gz
+    [root@mgt maui]# cd maui-3.3.1
+    [root@mgt maui-3.3.1]# vi maui.spec
+    ***********************************************************
+    Summary: MAUI
+    Name: maui
+    Version: 3.3.1
+    URL: http://www.adaptivecomputing.com/products/open-source/maui/
+    License: BSD
+    Release: 1
+    Vendor: Lenovo system x solution team
+    Group: System Environment/Base
+    Source: %{name}-%{version}.tar.gz
+    BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
+    Obsoletes: maui
+    Prefix: %{_prefix}
+    
+    %description
+    maui from lenovo
+    
+    %prep
+    %setup -n %{name}-%{version}
+    
+    %build
+    %configure --with-pbs --with-spooldir=/var/spool/torque
+    %{__make}
+    
+    %install
+    # Flush any old RPM build root
+    %__rm -rf $RPM_BUILD_ROOT
+    %{__mkdir_p} $RPM_BUILD_ROOT/%{_initddir}
+    cp ./etc/maui.d $RPM_BUILD_ROOT/%{_initddir} 
+    install -d $RPM_BUILD_ROOT/
+    %{__make} install BUILDROOT=$RPM_BUILD_ROOT/$BuildRoot
+    
+    
+    %files
+    #%defattr(-,root,root)
+    %{_bindir}/*
+    %{_sbindir}/maui
+    %{_includedir}/moab.h
+    %{_usr}/lib/libmcom.a
+    %{_usr}/lib/libmoab.a
+    /var/spool/torque/*
+    %{_initddir}/maui.d
+    
+    %clean
+    %__rm -rf $RPM_BUILD_ROOT
+    
+    %post
+    
+    %changelog
+    ***********************************************************
+    Note: Create the maui.spec mually
+    
+    [root@mgt maui-3.3.1]# rpmbuild -ba maui.spec 
+    [root@mgt maui-3.3.1]# cd /root/rpmbuild/RPMS/x86_64/
 
 
 ###mpich
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/mpich/”. 
+
+***mpich-3.1.3.tar.gz***
+http://www.mpich.org/static/downloads/3.1.3/
 
 
 ###mvapich
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/mvapich/”. 
+
+***mvapich2-2.0.1.tar.gz***
+http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/mvapich2-2.0.1.tar.gz
 
 
 ###openmpi
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/openmpi/”. 
+
+***openmpi-1.8.4.tar.gz***
+https://www.open-mpi.org/software/ompi/v1.8/
 
 
 ###OS for other Nodes
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/os/”. 
 
+If you are going to use ***Redhat Enterprise Linux***
+https://www.redhat.com/en
+
+For ***CentOS***
+https://www.centos.org/download/ 
 
 ###xcat
+Download packages through the URLs below and put them into **target folder:**
+> “~/lico_3.x/packages/xcat/”. 
+
+***xcat-core-2.8.5.tar.bz2***
+https://sourceforge.net/projects/xcat/files/xcat/2.8.x_Linux/
+
+***xcat-dep-201612051642.tar.bz2***
+https://xcat.org/files/xcat/xcat-dep/2.x_Linux/?C=M;O=D
+
+open constants config file, find `XCATDEP`, change it to `xcat-dep-201612051642.tar.bz2`
 
 
 #2. For installation on an existed cluster, please reference appendix 2
@@ -873,5 +1100,6 @@ Oberserve result through console A.
 Use ssh to login to BMC of Login Node, use asu to set bootorder as below: 
 
     asu set BootOrder.BootOrder “CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network”
+
 
 
