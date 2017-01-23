@@ -27,14 +27,14 @@ When finished downloading, please extract LiCO to a local folder e.g. your home 
 
 ##3rd party packages
 
-LiCO utilizes many 3rd party software, please download and put them into corresponding "packages" folder (e.g. “~/lico_3.x/packages/confluent/” for confluent package) before installing LiCO. 
+LiCO utilizes many 3rd party software, please download and put them into corresponding "packages" folder (e.g. "~/lico_3.x/packages/confluent/" for confluent package) before installing LiCO. 
 
 >**NOTE:**
 >Some of the softwares requires local compilation, you need to compile them and put the compiled package into "packages" folder. 
 
 ### confluent
 Download packages through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/confluent/”. 
+> "~/lico_3.x/packages/confluent/". 
 
 ***pyparsing-2.1.0-1.noarch.rpm***
 http://xcat.org/lenovo/16a/downloads/el6/x86_64/
@@ -60,7 +60,7 @@ http://xcat.org/lenovo/16a/downloads/el6/x86_64/
 
 ###ganglia
 Download ganglia packages through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/ganglia/”. 
+> "~/lico_3.x/packages/ganglia/". 
 
 ***ganglia-3.6.1.tar.gz***
 https://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/3.6.1
@@ -115,7 +115,7 @@ Follow command below to compile ganglia:
     [root@mgt x86_64]# cp ganglia-devel-3.6.1-1.x86_64.rpm ganglia-gmetad-3.6.1-1.x86_64.rpm  ganglia-gmond-3.6.1-1.x86_64.rpm ganglia-gmond-modules-python-3.6.1-1.x86_64.rpm ~/lico_3.0.1/packages/ganglia
 
 
-Follow command below to compile Ganglia-web：
+Follow command below to compile Ganglia-web:
 
     [root@mgt ~]# cd ..
     [root@mgt /]# cd opt/lico_3.0.1/packages/ganglia
@@ -135,7 +135,7 @@ Follow command below to compile Ganglia-web：
 
 ###cuda
 Download cuda package through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/gpu/”.
+> "~/lico_3.x/packages/gpu/".
  
 ***cuda_6.5.14_linux_64.run***
 https://developer.nvidia.com/cuda-toolkit-65
@@ -144,7 +144,7 @@ https://developer.nvidia.com/cuda-toolkit-65
 ###torque
 
 Download torque package through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/torque/”. 
+> "~/lico_3.x/packages/torque/". 
 
 ***torque-5.0.1.tar.gz***
 https://github.com/adaptivecomputing/torque/tree/5.0.1
@@ -170,7 +170,7 @@ Follow commands below to compile torque:
 
 ###maui
 Download maui package through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/maui/”. 
+> "~/lico_3.x/packages/maui/". 
 
 ***maui-3.3.1.tar.gz***
 http://www.adaptivecomputing.com/products/open-source/maui/
@@ -243,7 +243,7 @@ Follow commands below to compile maui:
 
 ###mpich
 Download mpich package through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/mpich/”. 
+> "~/lico_3.x/packages/mpich/". 
 
 ***mpich-3.1.3.tar.gz***
 http://www.mpich.org/static/downloads/3.1.3/
@@ -251,7 +251,7 @@ http://www.mpich.org/static/downloads/3.1.3/
 
 ###mvapich
 Download mvapich package through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/mvapich/”. 
+> "~/lico_3.x/packages/mvapich/". 
 
 ***mvapich2-2.0.1.tar.gz***
 http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/mvapich2-2.0.1.tar.gz
@@ -259,7 +259,7 @@ http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/mvapich2-2.0.1.tar.gz
 
 ###openmpi
 Download openmpi package through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/openmpi/”. 
+> "~/lico_3.x/packages/openmpi/". 
 
 ***openmpi-1.8.4.tar.gz***
 https://www.open-mpi.org/software/ompi/v1.8/
@@ -267,7 +267,7 @@ https://www.open-mpi.org/software/ompi/v1.8/
 
 ###OS for other Nodes
 Download the OS you need through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/os/”. 
+> "~/lico_3.x/packages/os/". 
 
 ***Redhat Enterprise Linux***
 https://www.redhat.com/en
@@ -277,7 +277,7 @@ https://www.centos.org/download/
 
 ###xcat
 Download xcat packages through the URLs below and put them into **target folder:**
-> “~/lico_3.x/packages/xcat/”. 
+> "~/lico_3.x/packages/xcat/". 
 
 ***xcat-core-2.8.5.tar.bz2***
 https://sourceforge.net/projects/xcat/files/xcat/2.8.x_Linux/
@@ -622,7 +622,7 @@ Change "/lico_3.x/etc/conf.yaml" as following:
     ldap_user_home_base: /share1/users_home
     ldap_server: 172.20.0.1(ip of head node)
     user_rootdir: /share1/users_root
-    cluster_sharedir: [“/share2”]
+    cluster_sharedir: ["/share2"]
 
 ***user_home_base:*** user_home_base is the home directory of a LDAP user, and it must be shared across the cluster.
 
@@ -630,7 +630,7 @@ Change "/lico_3.x/etc/conf.yaml" as following:
 
 ***cluster_sharedir:*** cluster_sharedir is the shared folder of a cluster besides user_home_base and user_rootdir.
 
-> **Note：**
+> **Note:**
 > 
 > The shared folders listed above must exist in system. If using nfs as the shared file system, nfs version must be version 3. 
 > Use following command to mount version 3 nfs folder: 
@@ -659,7 +659,7 @@ Here is a sample folder structure for user hpcadmin:
 
     [root@mgt lico_3.x]# python portal_package_install.py
 
-> **Note：**
+> **Note:**
 > 
 > Close current session after installation, then open another session to execute following commands. 
 
@@ -713,7 +713,7 @@ Open following URL and login:
     URL: http://172.20.0.1:8080/login/   
     Username/Password: hpcadmin/Passw0rd
 
-> **Note：** 
+> **Note:** 
 > 
 > If node status in GUI portal is incorrect, use route command to see if ganglia is working on correct port. ganglia should listening on management network port, if not, in every nodes, use `ip route add 239.2.11.71 dev eth0` (eth0 should be the management nic) to config and start gmond `service gmond restart`, then restart LiCO by using `./lico start`. 
 
@@ -802,7 +802,7 @@ If there is any chassis in cluster, this information must be specified.
 
  - ***name***: chassis name 
  - ***belonging_rack***: the rack name which chassis belongs to. the rack name must be one of the racks in Part 4. 
- - ***location***: location of chassis, it indicates which u the chassis is in，it is an integer value between 1-42. 
+ - ***location***: location of chassis, it indicates which u the chassis is in.it is an integer value between 1-42. 
  - ***machine_type***: type of the chassis, either Flex_Chassis or Nextscale_Chassis. If the machine is Nextscale, use Nextscale_Chassis; if the machine is Flex, use Flex_Chassis.
 
 
@@ -957,7 +957,7 @@ Change domain to cluster's domain.
 
 ##Step 11:  Update Nodes Information 
 
-Reference Appendix 1 to update nodes' information in lico_3.**/etc/nodes.csv。
+Reference Appendix 1 to update nodes' information in lico_3.**/etc/nodes.csv.
 
 
 ##Step 12: Install Dependencies of GUI Portal 
@@ -1028,7 +1028,7 @@ To stop service, issue command below:
 Open following URL and use hpcadmin/Passw0rd to login to LiCO web:
 http://172.20.0.1:8080/login/ 	
 
-> **Note：** 
+> **Note:** 
 > 
 > If node status in GUI Portal is incorrect, use route command to see if ganglia is working on correct port. ganglia should listening on management network port, if not, in every nodes, use `ip route add 239.2.11.71 dev eth0` (eth0 should be the management nic) to config and start gmond `service gmond restart`, then restart LiCO by using `./lico start`. 
 
@@ -1051,11 +1051,11 @@ In console B, go to lico folder and try to setup nodes through pxe :
 
 >**NOTE:** If node uses uefi mode to boot, issue command below:
 >
->`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”`
->
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes "c01n[001-010]" --bootingfrom "uefi-pxe"`
+>"
 >**NOTE:** if node uses legacy mode to boot, issue command below:
 >
->`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”`
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes "c01n[001-010]" --bootingfrom "legacy-pxe"`
 
 Monitoring the MAC discovery through following commands:
 
@@ -1081,11 +1081,11 @@ When you see "monitor deploy status", issue following command in console B:
 
 >**NOTE:** If node uses uefi mode to boot, issue command below:
 >
->`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “uefi-pxe”`
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes "c01n[001-010]" --bootingfrom "uefi-pxe"`
 >
 >**NOTE:** if node uses legacy mode to boot, issue command below:
 >
->`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes “c01n[001-010]” --bootingfrom “legacy-pxe”`
+>`[root@mgt lico_3.x]# ./bin/thinkserver_bootmanager.py --nodes "c01n[001-010]" --bootingfrom "legacy-pxe"`
 
 Then restart these node in console B:
 
@@ -1098,7 +1098,7 @@ Oberserve result through console A.
 
 Use ssh to login to BMC of Login Node, use asu to set bootorder as below: 
 
-    asu set BootOrder.BootOrder “CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network”
+    asu set BootOrder.BootOrder "CD/DVD Rom=USB Storage=Hard Disk 0=Legacy Only=PXE Network"
 
 
 
