@@ -366,6 +366,11 @@ https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_
 
 Since lustre does not provide pre-built package for Redhat 6.8, we need to download the source and compile lustre by ourselves.
 Download linux kernel 2.6.32-642 for rhel6.8 configure it properly. Then follow the instructions below to build lustre:
+
+>**NOTE:**
+>In order to support IB network, please intall the IB driver and development kit first. Then enter into source code folder, .e.g.  /usr/src/mlnx-ofa_kernel-3.3，and compile it by issuing: 
+> `./configure`
+> `make`
  
     git clone git://git.hpdd.intel.com/fs/lustre-release.git
     #since LiCO is using 2.8.60, switch to tag 2.8.60
