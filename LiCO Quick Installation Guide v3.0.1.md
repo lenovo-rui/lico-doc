@@ -373,10 +373,10 @@ Download linux kernel 2.6.32-642 for rhel6.8 configure it properly. Then follow 
     #make sure you already have installed libtool automake gcc autoconf
     sh autogen.sh
     ./configure
-    > you can select following parameter to build client/server or with ib driver
-    >  --with-o2ib=/usr/src/mlnx-ofa_kernel-3.3/ # to support ib 
-    >    --disable-server # compile client only
-    >    --disable-client # compile server only
+    # configure with following parameters to build client/server or build with ib driver
+    #  --with-o2ib=/usr/src/mlnx-ofa_kernel-3.3/ # to support ib 
+    #    --disable-server # compile client only
+    #    --disable-client # compile server only
     make rpms
 
 Copy following rpms to **~/lico_3.x/packages/lustre/6.8/client/**folder: 
