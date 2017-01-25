@@ -384,12 +384,12 @@ Download linux kernel 2.6.32-642 for rhel6.8 configure it properly. Then follow 
     #    --disable-client # compile server only
     make rpms
 
-Copy following rpms to **~/lico_3.x/packages/lustre/6.8/client/**folder: 
+Copy following rpms to **~/lico_3.x/packages/lustre/6.8/client/**  folder: 
 ***kmod-lustre-client-2.8.60-1.el6.x86_64.rpm***
 
 ***lustre-client-2.8.60-1.el6.x86_64.rpm***
 
-Copy following rpms to **~/lico_3.x/packages/lustre/6.8/server/**folder: 
+Copy following rpms to **~/lico_3.x/packages/lustre/6.8/server/**  folder: 
 
 ***kmod-lustre-2.8.60-1.el6.x86_64.rpm***
 
