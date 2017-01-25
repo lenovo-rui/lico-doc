@@ -315,7 +315,10 @@ Download lustre packages through the URLs below and put them into **target folde
 > Please **note** that lustre packages are different for server and client, we need to put there into different folder. 
 
 For Redhat 6.5 Lustre client files:
-**~/lico_3.x/packages/lustre/client/:**
+
+**~/lico_3.x/packages/lustre/6.5/client/**
+
+
 ***lustre-client-2.5.3-2.6.32_431.23.3.el6.x86_64.x86_64.rpm:***
 https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/client/RPMS/x86_64/
 
@@ -328,7 +331,10 @@ https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_
 ***kernel-2.6.32-431.23.3.el6.x86_64.rpm:***
 https://rhn.redhat.com/errata/RHSA-2014-0981.html
 
-**server:**
+**For Redhat 6.5 Lustre server files:**
+
+**~/lico_3.x/packages/lustre/6.5/server/**
+
 ***e2fsprogs-libs-1.42.12.wc1-7.el6.x86_64.rpm:***
 https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.12.wc1/el6/RPMS/x86_64/
 
@@ -357,11 +363,49 @@ https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_
 https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_64/
 
 For Redhat 6.8: 
-Since there is no existed packages for Redhat 6.8, you need to download and compile it. Follow the instructions below:
+Since lustre does not provide pre-built package for Redhat 6.8, we need to download the source and compile lustre by ourselves.
+Download linux kernel 2.6.32-642 for rhel6.8 configure it properly. Then follow the instructions below to build lustre:
+ 
+    git clone git://git.hpdd.intel.com/fs/lustre-release.git
+    #since LiCO is using 2.8.60, switch to tag 2.8.60
+    git checkout -b build_2_8 v2_8_60
+    #make sure you already have installed libtool automake gcc autoconf
+    sh autogen.sh
+    ./configure
+    > you can select following parameter to build client/server or with ib driver
+    >  --with-o2ib=/usr/src/mlnx-ofa_kernel-3.3/ # to support ib 
+    >    --disable-server # compile client only
+    >    --disable-client # compile server only
+    make rpms
 
-**client:**
+Copy following rpms to **~/lico_3.x/packages/lustre/6.8/client/**folder: 
+***kmod-lustre-client-2.8.60-1.el6.x86_64.rpm***
 
-**server:**
+***lustre-client-2.8.60-1.el6.x86_64.rpm***
+
+Copy following rpms to **~/lico_3.x/packages/lustre/6.8/server/**folder: 
+
+***kmod-lustre-2.8.60-1.el6.x86_64.rpm***
+
+***kmod-lustre-osd-ldiskfs-2.8.60-1.el6.x86_64.rpm***
+
+***lustre-2.8.60-1.el6.x86_64.rpm***
+
+***lustre-osd-ldiskfs-mount-2.8.60-1.el6.x86_64.rpm***
+
+You can download e2fsprogs from the links below and copy them to server folder:
+
+***e2fsprogs-1.42.13.wc5-7.el6.x86_64.rpm***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.13.wc5/el6/RPMS/x86_64/
+
+***e2fsprogs-libs-1.42.13.wc5-7.el6.x86_64.rpm***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.13.wc5/el6/RPMS/x86_64/
+
+***libcom_err-1.42.13.wc5-7.el6.x86_64.rpm***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.13.wc5/el6/RPMS/x86_64/
+
+***libss-1.42.13.wc5-7.el6.x86_64.rpm***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.13.wc5/el6/RPMS/x86_64/
 
 
 ###Infinite Band
