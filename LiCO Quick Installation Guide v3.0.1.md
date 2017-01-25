@@ -287,6 +287,124 @@ https://xcat.org/files/xcat/xcat-dep/2.x_Linux/?C=M;O=D
 
 open constants config file, find `XCATDEP`, change it to `xcat-dep-201612051642.tar.bz2`
 
+###postgreSQL
+Download postgresql packages through the URLs below and put them into **target folder:**
+> "~/lico_3.x/packages/portal_deps/postgresql/."
+ 
+***postgresql84-8.4.18-1PGDG.rhel6.x86_64.rpm:***
+https://yum.postgresql.org/8.4/redhat/rhel-6-x86_64/
+
+***postgresql84-contrib-8.4.18-1PGDG.rhel6.x86_64.rpm:***
+https://yum.postgresql.org/8.4/redhat/rhel-6-x86_64/
+
+***postgresql84-devel-8.4.18-1PGDG.rhel6.x86_64.rpm:***
+https://yum.postgresql.org/8.4/redhat/rhel-6-x86_64/
+
+***postgresql84-libs-8.4.18-1PGDG.rhel6.x86_64.rpm:***
+https://yum.postgresql.org/8.4/redhat/rhel-6-x86_64/
+
+***postgresql84-plpython-8.4.18-1PGDG.rhel6.x86_64.rpm:***
+https://yum.postgresql.org/8.4/redhat/rhel-6-x86_64/
+
+***postgresql84-server-8.4.18-1PGDG.rhel6.x86_64.rpm:***
+https://yum.postgresql.org/8.4/redhat/rhel-6-x86_64/
+
+###Lustre
+Download lustre packages through the URLs below and put them into **target folder:**
+> "~/lico_3.x/packages/lustre/"
+> Please **note** that lustre packages are different for server and client, we need to put there into different folder. 
+
+For Redhat 6.5 Lustre client files:
+**~/lico_3.x/packages/lustre/client/:**
+***lustre-client-2.5.3-2.6.32_431.23.3.el6.x86_64.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/client/RPMS/x86_64/
+
+***lustre-client-modules-2.5.3-2.6.32_431.23.3.el6.x86_64.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/client/RPMS/x86_64/
+
+***kernel-firmware-2.6.32-431.23.3.el6_lustre.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_64/
+
+***kernel-2.6.32-431.23.3.el6.x86_64.rpm:***
+https://rhn.redhat.com/errata/RHSA-2014-0981.html
+
+**server:**
+***e2fsprogs-libs-1.42.12.wc1-7.el6.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.12.wc1/el6/RPMS/x86_64/
+
+***e2fsprogs-1.42.12.wc1-7.el6.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.12.wc1/el6/RPMS/x86_64/
+
+***libss-1.42.12.wc1-7.el6.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.12.wc1/el6/RPMS/x86_64/
+
+***libcom_err-1.42.12.wc1-7.el6.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/e2fsprogs/1.42.12.wc1/el6/RPMS/x86_64/
+
+***kernel-firmware-2.6.32-431.23.3.el6_lustre.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_64/
+
+***kernel-2.6.32-431.23.3.el6_lustre.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_64/
+
+***lustre-osd-ldiskfs-2.5.3-2.6.32_431.23.3.el6_lustre.x86_64.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_64/
+
+***lustre-modules-2.5.3-2.6.32_431.23.3.el6_lustre.x86_64.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_64/
+
+***lustre-2.5.3-2.6.32_431.23.3.el6_lustre.x86_64.x86_64.rpm:***
+https://downloads.hpdd.intel.com/public/lustre/lustre-2.5.3/el6/server/RPMS/x86_64/
+
+For Redhat 6.8: 
+Since there is no existed packages for Redhat 6.8, you need to download and compile it. Follow the instructions below:
+
+**client:**
+
+**server:**
+
+
+###Infinite Band
+Download infinite band packages through the URLs below and put them into **target folder:**
+> "~/lico_3.x/packages/ib/"
+
+***MLNX_OFED_LINUX-2.2-1.0.1.1-rhel6.5-x86_64.iso:***
+http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mname=MLNX_OFED_LINUX-2.2-1.0.1.1-rhel6.5-x86_64.iso
+
+***MLNX_OFED_LINUX-3.3-1.0.4.0-rhel6.8-x86_64.iso:***
+http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mver=MLNX_OFED-3.3-1.0.4.0&mname=MLNX_OFED_LINUX-3.3-1.0.4.0-rhel6.8-x86_64.
+
+
+###RabbitMQ
+Download rabbitmq packages through the URLs below and put them into **target folder:**
+> "~/lico_3.x/packages/portal_deps/rabbitmq/"
+
+***rabbitmq-server-3.5.3-1.noarch.rpm:***
+http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.3/
+
+***erlang-17.4-1.el6.x86_64.rpm:***
+http: http://www.rabbitmq.com/releases/erlang/
+
+
+###MongoDB
+Download mongodb packages through the URLs below and put them into **target folder:**
+> "~/lico_3.x/packages/portal_deps/mongodb/"
+
+***mongodb-org-tools-2.6.12-1.x86_64.rpm:***
+http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/RPMS/
+
+***mongodb-org-shell-2.6.12-1.x86_64.rpm:***
+http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/RPMS/
+
+***mongodb-org-server-2.6.12-1.x86_64.rpm:***
+http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/RPMS/
+
+***mongodb-org-mongos-2.6.12-1.x86_64.rpm:***
+http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/RPMS/
+
+***mongodb-org-2.6.12-1.x86_64.rpm:***
+http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/RPMS/
+
 
 #2. To install LiCO for an existed cluster, please reference appendix 2
 
