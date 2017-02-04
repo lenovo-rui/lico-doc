@@ -384,12 +384,13 @@ Download linux kernel 2.6.32-642 for rhel6.8 configure it properly. Then follow 
     #    --disable-client # compile server only
     make rpms
 
-Copy following rpms to **~/lico_3.x/packages/lustre/6.8/client/**  folder: 
+Copy following rpms to **"~/lico_3.x/packages/lustre/6.8/client/"**: 
+
 ***kmod-lustre-client-2.8.60-1.el6.x86_64.rpm***
 
 ***lustre-client-2.8.60-1.el6.x86_64.rpm***
 
-Copy following rpms to **~/lico_3.x/packages/lustre/6.8/server/**  folder: 
+Copy following rpms to **"~/lico_3.x/packages/lustre/6.8/server/"**: 
 
 ***kmod-lustre-2.8.60-1.el6.x86_64.rpm***
 
@@ -425,7 +426,12 @@ http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downl
 http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mver=MLNX_OFED-3.3-1.0.4.0&mname=MLNX_OFED_LINUX-3.3-1.0.4.0-rhel6.8-x86_64.
 
 >**NOTE:**
->If you are using lustre on rhel6.5, a special kernel version build is required for IB installation. You need to build the ext iso (e.g. MLNX_OFED_LINUX-2.2-1.0.1.1-rhel6.5-x86_64-ext.iso) before installing Mellanox OFED. Reference its manual "Pre-installation notes" part for more details. 
+>If you are using lustre on rhel6.5, a special kernel version build is required for IB installation. You need to build the ext iso (e.g. MLNX_OFED_LINUX-2.2-1.0.1.1-rhel6.5-x86_64-ext.iso) before installing Mellanox OFED. Reference its manual "Pre-installation notes" part for more details.
+> here are quick steps:
+>- install lustre devel kernel  
+>- build IB ext package with following command: 
+>`#./MLNX_OFED_LINUX-2.2-1.0.1.1-rhel6.5-x86_64/mlnx_add_kernel_support.sh -m ./MLNX_OFED_LINUX-2.2-1.0.1.1-rhel6.5-x86_64/ --make-iso`
+ 
 
 ###RabbitMQ
 Download rabbitmq packages through the URLs below and put them into **target folder:**
