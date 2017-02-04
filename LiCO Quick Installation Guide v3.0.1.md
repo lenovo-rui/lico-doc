@@ -424,6 +424,8 @@ http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downl
 ***MLNX_OFED_LINUX-3.3-1.0.4.0-rhel6.8-x86_64.iso:***
 http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mver=MLNX_OFED-3.3-1.0.4.0&mname=MLNX_OFED_LINUX-3.3-1.0.4.0-rhel6.8-x86_64.
 
+>**NOTE:**
+>If you are using lustre on rhel6.5, a special kernel version build is required for IB installation. You need to build the ext iso (e.g. MLNX_OFED_LINUX-2.2-1.0.1.1-rhel6.5-x86_64-ext.iso) before installing Mellanox OFED. Reference its manual "Pre-installation notes" part for more details. 
 
 ###RabbitMQ
 Download rabbitmq packages through the URLs below and put them into **target folder:**
