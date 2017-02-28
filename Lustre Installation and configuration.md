@@ -91,6 +91,9 @@ Lico/packages/luster/client
     rpm -ivh lustre-client-modules-2.5.3-2.6.32_431.23.3.el6.x86_64.x86_64.rpm
     rpm -ivh lustre-client-2.5.3-2.6.32_431.23.3.el6.x86_64.x86_64.rpm
 
+    mkdir /mnt/lustre
+    mount -t lustre mds1@tcp0:/toto /mnt/lustre
+
 #Install LMT
 
 ##Install Cerebro for LMT
@@ -145,28 +148,20 @@ download LMT source from here:
 ###Install Lua
 
 
-# yum install lua-devel
-# yum install mysql-devel
-# rpm -Uvh ~/rpmbuild/RPMS/x86_64/cerebro-1.18-1.x86_64.rpm
+    # yum install lua-devel
+    # yum install mysql-devel
+    # rpm -Uvh ~/rpmbuild/RPMS/x86_64/cerebro-1.18-1.x86_64.rpm
+
  
+###Build LMT rpm
 
-
- LMT git clone
-
-
-# git clone https://github.com/chaos/lmt.git
-Initialized empty Git repository in /usr/src/lmt/.git/
-remote: Counting objects: 3404, done.
-remote: Compressing objects: 100% (16/16), done.
-remote: Total 3404 (delta 0), reused 0 (delta 0), pack-reused 3388
-Receiving objects: 100% (3404/3404), 6.09 MiB | 1.29 MiB/s, done.
-Resolving deltas: 100% (1709/1709), done.
- 
- 
-
-
- RPM build 세팅 및 생성
-
+    # git clone https://github.com/chaos/lmt.git
+    Initialized empty Git repository in /usr/src/lmt/.git/
+    remote: Counting objects: 3404, done.
+    remote: Compressing objects: 100% (16/16), done.
+    remote: Total 3404 (delta 0), reused 0 (delta 0), pack-reused 3388
+    Receiving objects: 100% (3404/3404), 6.09 MiB | 1.29 MiB/s, done.
+    Resolving deltas: 100% (1709/1709), done.
 
     # cd lmt
     # ./autogen.sh
@@ -204,102 +199,73 @@ Resolving deltas: 100% (1709/1709), done.
     Lustre Monitoring Tool
 
  
+###Build LMT-GUI rpm
+
+    # yum install java-devel
+    # git clone https://github.com/chaos/lmt-gui.git 
+    # cd lmt-gui/
+    # ./autogen.sh
+    # ./configure
+    # cp lmt-gui.spec ~/rpmbuild/SPECS/.
+    # make distclean
+    # cd ..
+    # mv lmt-gui/ lmt-gui-3.0.0  ==> 생성된 spec file에서 version 확인
+    # tar -czvf lmt-gui-3.0.0.tar.gz lmt-gui-3.0.0/
+    # cp lmt-gui-3.0.0.tar.gz ~/rpmbuild/SOURCES/.
+    # rpmbuild -ba ~/rpmbuild/SPECS/lmt-gui.spec
+    + umask 022
+    + cd /root/rpmbuild/BUILD
+    + cd lmt-gui-3.0.0
+    + rm -rf /root/rpmbuild/BUILDROOT/lmt-gui-3.0.0-1.x86_64
+    + exit 0
 
 
-
-
- java 설치
+    # ls ~/rpmbuild/RPMS/x86_64/lmt-gui*
+    /root/rpmbuild/RPMS/x86_64/lmt-gui-3.0.0-1.x86_64.rpm
+    [root@server0 src]# rpm -qpi /root/rpmbuild/RPMS/x86_64/lmt-gui-3.0.0-1.x86_64.rpm
+    Name        : lmt-gui                      Relocations: (not relocatable)
+    Version     : 3.0.0                             Vendor: (none)
+    Release     : 1                             Build Date: Tue 17 May 2016 04:00:41 PM KST
+    Install Date: (not installed)               Build Host: server0
+    Group       : Applications/System           Source RPM: lmt-gui-3.0.0-1.src.rpm
+    Size        : 2347309                          License: GPL
+    Signature   : (none)
+    Packager    : Jim Garlick <garlick@llnl.gov>
+    URL         : http://code.google.com/p/lmt
+    Summary     : Lustre Montitoring Tools Client
+    Description :
+    Lustre Monitoring Tools (LMT) GUI Client
 
  
-# yum install java-devel
+###Install LMT on management node
 
+    # yum install mysql-server
+    # wget http://195.220.108.108/linux/centos/6.7/os/x86_64/Packages/perl-YAML-Syck-1.07-4.el6.x86_64.rpm
+    # rpm -Uvh perl-YAML-Syck-1.07-4.el6.x86_64.rpm
+    # wget http://195.220.108.108/linux/centos/6.7/os/x86_64/Packages/perl-Date-Manip-6.24-1.el6.noarch.rpm
+    # rpm -Uvh perl-Date-Manip-6.24-1.el6.noarch.rpm
 
+### Install LMT server 
 
- lmt-gui 다운로드
+    # rpm -Uvh ~/rpmbuild/RPMS/x86_64/lmt-server-3.2.1-1.el6.x86_64.rpm
+    # tail /etc/cerebro.conf
+    #####################################################################################################
+    cerebro_metric_server   192.168.80.11
+    cerebrod_heartbeat_frequency 10 20
+    cerebrod_speak  on
+    cerebrod_speak_message_config   192.168.80.11
+    cerebrod_listen on
+    cerebrod_listen_message_config  192.168.80.11
+    cerebrod_metric_controller      on
+    cerebrod_event_server   on
+    cerebro_event_server    192.168.80.11
+    # cat /etc/hostsfile    
+    server0
+    server1
+    server2
+    server3
+    server4
 
-
-# git clone https://github.com/chaos/lmt-gui.git 
-
-
-
- RPM build 세팅 및 생성
-
-
-# cd lmt-gui/
-# ./autogen.sh
-# ./configure
-# cp lmt-gui.spec ~/rpmbuild/SPECS/.
-# make distclean
-# cd ..
-# mv lmt-gui/ lmt-gui-3.0.0  ==> 생성된 spec file에서 version 확인
-# tar -czvf lmt-gui-3.0.0.tar.gz lmt-gui-3.0.0/
-# cp lmt-gui-3.0.0.tar.gz ~/rpmbuild/SOURCES/.
-# rpmbuild -ba ~/rpmbuild/SPECS/lmt-gui.spec
-+ umask 022
-+ cd /root/rpmbuild/BUILD
-+ cd lmt-gui-3.0.0
-+ rm -rf /root/rpmbuild/BUILDROOT/lmt-gui-3.0.0-1.x86_64
-+ exit 0
- 
-
-
- 생성된 RPM 확인
-
-
-# ls ~/rpmbuild/RPMS/x86_64/lmt-gui*
-/root/rpmbuild/RPMS/x86_64/lmt-gui-3.0.0-1.x86_64.rpm
-[root@server0 src]# rpm -qpi /root/rpmbuild/RPMS/x86_64/lmt-gui-3.0.0-1.x86_64.rpm
-Name        : lmt-gui                      Relocations: (not relocatable)
-Version     : 3.0.0                             Vendor: (none)
-Release     : 1                             Build Date: Tue 17 May 2016 04:00:41 PM KST
-Install Date: (not installed)               Build Host: server0
-Group       : Applications/System           Source RPM: lmt-gui-3.0.0-1.src.rpm
-Size        : 2347309                          License: GPL
-Signature   : (none)
-Packager    : Jim Garlick <garlick@llnl.gov>
-URL         : http://code.google.com/p/lmt
-Summary     : Lustre Montitoring Tools Client
-Description :
-Lustre Monitoring Tools (LMT) GUI Client
- 
-Management node 설치
-
-
-# yum install mysql-server
-# wget http://195.220.108.108/linux/centos/6.7/os/x86_64/Packages/perl-YAML-Syck-1.07-4.el6.x86_64.rpm
-# rpm -Uvh perl-YAML-Syck-1.07-4.el6.x86_64.rpm
-# wget http://195.220.108.108/linux/centos/6.7/os/x86_64/Packages/perl-Date-Manip-6.24-1.el6.noarch.rpm
-# rpm -Uvh perl-Date-Manip-6.24-1.el6.noarch.rpm
- 
-
-
- lmt server 설치
-
-
-# rpm -Uvh ~/rpmbuild/RPMS/x86_64/lmt-server-3.2.1-1.el6.x86_64.rpm
- 
-
-
- lmt server 설정
-
-
-# tail /etc/cerebro.conf
-#####################################################################################################
-cerebro_metric_server   192.168.80.11
-cerebrod_heartbeat_frequency 10 20
-cerebrod_speak  on
-cerebrod_speak_message_config   192.168.80.11
-cerebrod_listen on
-cerebrod_listen_message_config  192.168.80.11
-cerebrod_metric_controller      on
-cerebrod_event_server   on
-cerebro_event_server    192.168.80.11
-# cat /etc/hostsfile            ==> /etc/hosts에 등록되어 있는 도메인명만 명시
-server0
-server1
-server2
-server3
-server4
  
 
 
@@ -501,8 +467,6 @@ FLUSH PRIVILEGES;
 
     - lmtinit -a lfs_test -s /usr/share/lmt/create_schema-1.1.sql -c /usr/etc/lmt/lmt.conf
 
-  * DB 상태
-
  
 mysql> show databases;
 +---------------------+
@@ -629,11 +593,7 @@ Available tables for lfs_test:
                   ROUTER_VARIABLE_INFO   4
                         TIMESTAMP_INFO   204
                                VERSION   0
- 
- 
 
-
- lwatch 실행
 
 
 # lwatch
@@ -659,3 +619,88 @@ wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch
 rpm -ihv epel-release-6-8.noarch.rpm
 yum info htop
 yum install htop
+
+
+#Install Logstach on nodes (OSS, MDS)
+
+Download and install the public signing key:
+
+    rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+Add the following in your /etc/yum.repos.d/ directory in a file with a .repo suffix, for example logstash.repo
+  
+    [logstash-5.x]
+    name=Elastic repository for 5.x packages
+    baseurl=https://artifacts.elastic.co/packages/5.x/yum
+    gpgcheck=1
+    gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    enabled=1
+    autorefresh=1
+    type=rpm-md
+
+And your repository is ready for use. You can install it with:
+    
+    sudo yum install logstash
+
+#Install ElasticSearch on service server
+
+当遇到以下错误时：
+启动报错1
+
+es5.2无法启动bug
+报错：
+ERROR: bootstrap checks failed
+system call filters failed to install; check the logs and fix your configuration or disable system call filters at your own risk
+
+
+原因：
+这是在因为Centos6不支持SecComp，而ES5.2.0默认bootstrap.system_call_filter为true进行检测，所以导致检测失败，失败后直接导致ES不能启动。
+
+
+解决：
+在elasticsearch.yml中配置bootstrap.system_call_filter为false，注意要在Memory下面:
+bootstrap.memory_lock: false
+bootstrap.system_call_filter: false
+
+
+可以查看issues
+https://github.com/elastic/elasticsearch/issues/22899
+
+
+**max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]**
+修改/etc/security/limits.conf 
+    elastic hard nofile 65536
+    elastic soft nofile  65536
+
+>备注:elastic这里是指定用户elastic 当然可以用*表示所有人
+
+    * hard nofile 65536
+    * soft nofile 65536
+
+2 、[2016-11-19T03:22:22,188][WARN ][o.e.b.BootstrapCheck     ] [4Ut8v_1] max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+更改sysctl.conf的配置
+
+vim /etc/sysctl.d/99-sysctl.conf  或
+vim /etc/sysctl.conf
+增加：vm.max_map_count = 262144
+
+sysctl -p //保存生效
+
+当收到错误：max number of threads [1024] for user [**] is too low, increase to at least [2048]
+
+    # cat /etc/security/limits.d/90-nproc.conf 
+    # Default limit for number of user's processes to prevent
+    # accidental fork bombs.
+    # See rhbz #432903 for reasoning.
+
+    *          soft    nproc     2048
+    root       soft    nproc     unlimited
+
+rpm -Uvh jdk-8u121-linux-x64.rpm
+./bin/elasticsearch 
+
+
+需要文件：
+lustre 文件
+collectl装好
