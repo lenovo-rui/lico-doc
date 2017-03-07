@@ -7,6 +7,8 @@ LiCO Quick Installation Guide v3.0.1
 
 #1. Prerequisites
 
+Skip these steps if you already have the prerequisite packages downloaded and installed.
+
 ##OS
 
 LiCO supports both CentOS 6.5/6.8 and RedHat 6.5/6.8, download the OS you prefer. 
